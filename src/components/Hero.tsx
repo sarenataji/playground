@@ -9,7 +9,7 @@ import { prefersReducedMotion } from "@/lib/motion";
 
 gsap.registerPlugin(SplitText, useGSAP);
 
-export function Hero() {
+export function Hero({ variant = "rooms" }: { variant?: "rooms" | "original" }) {
   const root = useRef<HTMLElement>(null);
   const blobRef = useRef<HTMLCanvasElement>(null);
 
@@ -17,10 +17,13 @@ export function Hero() {
     () => {
       if (!root.current || prefersReducedMotion()) return;
       document.fonts.ready.then(() => {
-        const split = SplitText.create(".hero-line", {
-          type: "chars",
-          charsClass: "char",
-        });
+        const split = SplitText.create(
+          variant === "original" ? ".hero-line" : ".leave, .play-word, .outside-word",
+          {
+            type: "chars",
+            charsClass: "char",
+          },
+        );
         gsap.from(split.chars, {
           yPercent: 110,
           rotateZ: 4,
@@ -43,7 +46,7 @@ export function Hero() {
         { strokeDashoffset: 0, duration: 1.1, ease: "power2.inOut", delay: 0.9 },
       );
     },
-    { scope: root },
+    { scope: root, dependencies: [variant] },
   );
 
   useEffect(() => {
@@ -67,39 +70,75 @@ export function Hero() {
     <section ref={root} className="hero" id="top">
       <canvas ref={blobRef} className="hero-blob" aria-hidden />
       <p className="kicker">You can put the thoughts down</p>
-      <h1 className="hero-title">
-        <span className="hero-line">Leave the</span>
-        <span className="hero-row">
+      {variant === "original" ? (
+        <h1 className="hero-title">
+          <span className="hero-line">Leave the</span>
+          <span className="hero-row">
+            <span className="hero-line play-word">thoughts</span>
+            <Stamp />
+          </span>
+          <span className="hero-row of-row">
+            <span className="hero-line">outside</span>
+            <svg className="hero-arrow" viewBox="0 0 48 72" fill="none" aria-hidden>
+              <path
+                d="M24 4 C18 22, 32 34, 22 52"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                pathLength={80}
+                style={{ strokeDasharray: 80 }}
+              />
+              <path
+                d="M14 46 L22 54 L30 42"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                pathLength={80}
+                style={{ strokeDasharray: 80 }}
+              />
+            </svg>
+          </span>
+        </h1>
+      ) : (
+        <h1 className="hero-title">
+          <span className="hero-line leave">Leave the</span>
           <span className="hero-line play-word">thoughts</span>
           <Stamp />
-        </span>
-        <span className="hero-row of-row">
-          <span className="hero-line">outside</span>
-          <svg className="hero-arrow" viewBox="0 0 48 72" fill="none" aria-hidden>
-            <path
-              d="M24 4 C18 22, 32 34, 22 52"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              pathLength={80}
-              style={{ strokeDasharray: 80 }}
-            />
-            <path
-              d="M14 46 L22 54 L30 42"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              pathLength={80}
-              style={{ strokeDasharray: 80 }}
-            />
-          </svg>
-        </span>
-      </h1>
+          <span className="hero-line outside">
+            <span className="outside-word">outside</span>
+            <svg className="hero-arrow" viewBox="0 0 48 72" fill="none" aria-hidden>
+              <path
+                d="M24 4 C18 22, 32 34, 22 52"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                pathLength={80}
+                style={{ strokeDasharray: 80 }}
+              />
+              <path
+                d="M14 46 L22 54 L30 42"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                pathLength={80}
+                style={{ strokeDasharray: 80 }}
+              />
+            </svg>
+          </span>
+        </h1>
+      )}
       <p className="hero-lede">
-        This is a safe place. Motion will keep you company. Words will move so
-        your mind does not have to.
+        {variant === "original"
+          ? "This is a safe place. Motion will keep you company. Words will move so your mind does not have to."
+          : "This is a safe place. Motion will keep you company. Color will change with the room. You can feel alive without having to think."}
       </p>
+      {variant === "rooms" && (
+        <a className="enter-room" href="/breathe">
+          Begin with a breath
+        </a>
+      )}
     </section>
   );
 }

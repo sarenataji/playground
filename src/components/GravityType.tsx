@@ -146,7 +146,7 @@ export function GravityType() {
         <h2 className="display">Let the word find the floor.</h2>
         <p className="lede">Drag a letter. The others will settle when they are ready.</p>
       </div>
-      <div ref={stage} className="gravity-stage">
+      <div ref={stage} className="gravity-stage well">
         {WORD.map((ch, i) => (
           <span key={i} className="g-letter" style={{ transform: `translate(${40 + i * 72}px, 36px)` }}>
             {ch}

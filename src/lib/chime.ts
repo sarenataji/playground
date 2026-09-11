@@ -1,23 +1,34 @@
+let ctx: AudioContext | null = null;
+
+function audio() {
+  const Ctx =
+    window.AudioContext ||
+    (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+  if (!Ctx) return null;
+  if (!ctx) ctx = new Ctx();
+  if (ctx.state === "suspended") void ctx.resume();
+  return ctx;
+}
+
+export function playTone(freq: number, duration = 1.15, gain = 0.055) {
+  const c = audio();
+  if (!c) return;
+  const now = c.currentTime;
+  const osc = c.createOscillator();
+  const g = c.createGain();
+  osc.type = "sine";
+  osc.frequency.value = freq;
+  g.gain.setValueAtTime(0, now);
+  g.gain.linearRampToValueAtTime(gain, now + 0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+  osc.connect(g);
+  g.connect(c.destination);
+  osc.start(now);
+  osc.stop(now + duration + 0.05);
+}
+
 export function playUnlockChime() {
-  const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-  if (!Ctx) return;
-  const ctx = new Ctx();
-  const now = ctx.currentTime;
-
-  const tones = [392, 494, 587];
-  tones.forEach((freq, i) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.05, now + 0.02 + i * 0.05);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7 + i * 0.08);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now + i * 0.05);
-    osc.stop(now + 0.9);
-  });
-
-  window.setTimeout(() => void ctx.close(), 1200);
+  playTone(392, 0.9, 0.05);
+  window.setTimeout(() => playTone(494, 0.9, 0.045), 50);
+  window.setTimeout(() => playTone(587, 1, 0.04), 110);
 }

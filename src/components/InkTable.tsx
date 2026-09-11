@@ -21,7 +21,7 @@ export function InkTable() {
           want the page to flood. There is no score.
         </p>
       </div>
-      <div className="table-well">
+      <div className="table-well well">
         <p>Stay as long as you like. The ink will wait.</p>
       </div>
     </section>

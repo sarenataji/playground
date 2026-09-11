@@ -53,7 +53,7 @@ export function Tunnel() {
     const tick = (t: number) => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      ctx.fillStyle = "#070707";
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--paper").trim() || "#0b0d10";
       ctx.fillRect(0, 0, w, h);
       const cx = w / 2;
       const cy = h / 2;
@@ -80,7 +80,7 @@ export function Tunnel() {
 
   return (
     <section ref={root} className="room tunnel" id="tunnel">
-      <canvas ref={canvasRef} className="room-canvas" />
+      <canvas ref={canvasRef} className="room-canvas well" />
       <div className="room-copy invert">
         <p className="kicker invert">Depth without hurry</p>
         <h2 className="display">There is no destination.</h2>

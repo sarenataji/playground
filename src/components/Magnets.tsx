@@ -61,7 +61,7 @@ export function Magnets() {
     const tick = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      ctx.fillStyle = "#0d1116";
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--paper").trim() || "#121826";
       ctx.fillRect(0, 0, w, h);
 
       if (live && !prefersReducedMotion()) {
@@ -137,7 +137,7 @@ export function Magnets() {
 
   return (
     <section ref={root} className="room magnets" id="magnets">
-      <canvas ref={canvasRef} className="room-canvas" />
+      <canvas ref={canvasRef} className="room-canvas well" />
       <div className="room-copy invert">
         <p className="kicker invert">Come close, or make space</p>
         <h2 className="display">Your hand is the weather.</h2>

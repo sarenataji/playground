@@ -81,7 +81,7 @@ export function Springs() {
     const tick = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      ctx.fillStyle = "#e7e0d4";
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--paper").trim() || "#efe6d8";
       ctx.fillRect(0, 0, w, h);
 
       if (live && !prefersReducedMotion()) {
@@ -160,7 +160,7 @@ export function Springs() {
 
   return (
     <section ref={root} className="room springs" id="springs">
-      <canvas ref={canvasRef} className="room-canvas" />
+      <canvas ref={canvasRef} className="room-canvas well" />
       <div className="room-copy">
         <p className="kicker">Everything comes home</p>
         <h2 className="display">Pull one point.</h2>

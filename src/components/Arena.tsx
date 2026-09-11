@@ -22,7 +22,7 @@ export function Arena() {
     if (!ctx) return;
 
     let balls: Ball[] = [];
-    const colors = ["#161412", "#c45c26", "#2c5a52", "#f3eee6", "#8a8175"];
+    const colors = ["#16332c", "#d4784a", "#2f6b5d", "#f3eee6", "#e8c9a0", "#5f8a72"];
 
     const resize = () => {
       const dpr = Math.min(1.5, window.devicePixelRatio || 1);
@@ -51,7 +51,7 @@ export function Arena() {
     const tick = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      ctx.fillStyle = "#c9ddd6";
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--paper").trim() || "#cfe3dc";
       ctx.fillRect(0, 0, w, h);
 
       const px = pointer.nx * w;
@@ -149,7 +149,7 @@ export function Arena() {
 
   return (
     <section ref={root} className="room arena" id="arena">
-      <canvas ref={canvasRef} className="room-canvas" />
+      <canvas ref={canvasRef} className="room-canvas well" />
       <div className="room-copy">
         <p className="kicker">Company, not a contest</p>
         <h2 className="display">A gentle knock.</h2>

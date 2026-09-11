@@ -74,7 +74,7 @@ export function Shatter() {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = "rgba(26, 16, 14, 0.92)";
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--paper").trim() || "#2a1c18";
       ctx.fillRect(0, 0, w, h);
 
       if (hold.current && !brokenRef.current && !prefersReducedMotion()) {
@@ -138,10 +138,13 @@ export function Shatter() {
     if (broken) return;
     hold.current = true;
   };
+  const stop = () => {
+    hold.current = false;
+  };
 
   return (
     <section ref={root} className="room shatter" id="shatter">
-      <canvas ref={canvasRef} className="room-canvas" />
+      <canvas ref={canvasRef} className="room-canvas well" />
       <div className="room-copy invert">
         <p className="kicker invert">A little pressure</p>
         <h2 className="display">Hold until it lets go.</h2>
@@ -152,6 +155,8 @@ export function Shatter() {
           type="button"
           className="hold-btn"
           onPointerDown={start}
+          onPointerUp={stop}
+          onPointerLeave={stop}
           onClick={start}
           disabled={broken}
         >

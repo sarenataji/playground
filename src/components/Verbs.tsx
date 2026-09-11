@@ -10,21 +10,24 @@ const verbs = [
   {
     from: "A pause",
     verb: "Rest",
+    href: "/breathe",
     copy: "Nothing is asked of you. Sit with the motion. Let the page do the thinking for a while.",
   },
   {
     from: "A breath",
     verb: "Soften",
+    href: "/pond",
     copy: "Hold, drag, watch things fall. The body of the site is gentle. You do not have to finish anything.",
   },
   {
     from: "A stay",
     verb: "Stay",
+    href: "/bloom",
     copy: "Ink listens. Letters have weight. A heart opened the door. This room will wait as long as you need.",
   },
 ];
 
-export function Verbs() {
+export function Verbs({ linked = true }: { linked?: boolean }) {
   const root = useRef<HTMLElement>(null);
   useGSAP(
     () => {
@@ -45,13 +48,24 @@ export function Verbs() {
     <section ref={root} className="verbs" id="system">
       <p className="kicker">Three ways to be here</p>
       <div className="verb-grid">
-        {verbs.map((v) => (
-          <article key={v.verb} className="verb-card">
-            <p className="verb-from">{v.from}</p>
-            <h2>{v.verb}</h2>
-            <p>{v.copy}</p>
-          </article>
-        ))}
+        {verbs.map((v) => {
+          const inner = (
+            <>
+              <p className="verb-from">{v.from}</p>
+              <h2>{v.verb}</h2>
+              <p>{v.copy}</p>
+            </>
+          );
+          return linked ? (
+            <a key={v.verb} href={v.href} className="verb-card">
+              {inner}
+            </a>
+          ) : (
+            <article key={v.verb} className="verb-card">
+              {inner}
+            </article>
+          );
+        })}
       </div>
     </section>
   );
