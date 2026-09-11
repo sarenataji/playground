@@ -162,9 +162,9 @@ export function Springs() {
     <section ref={root} className="room springs" id="springs">
       <canvas ref={canvasRef} className="room-canvas" />
       <div className="room-copy">
-        <p className="kicker">Lattice · springs</p>
-        <h2 className="display">Pull a node.</h2>
-        <p className="lede">The mesh remembers where it was. Drag any joint.</p>
+        <p className="kicker">Everything comes home</p>
+        <h2 className="display">Pull one point.</h2>
+        <p className="lede">The rest remember how to return. Nothing stays stretched forever.</p>
       </div>
     </section>
   );

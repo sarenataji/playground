@@ -151,9 +151,9 @@ export function Arena() {
     <section ref={root} className="room arena" id="arena">
       <canvas ref={canvasRef} className="room-canvas" />
       <div className="room-copy">
-        <p className="kicker">Slosh · knock</p>
-        <h2 className="display">A small collision.</h2>
-        <p className="lede">Your cursor is a body. Bump the others around.</p>
+        <p className="kicker">Company, not a contest</p>
+        <h2 className="display">A gentle knock.</h2>
+        <p className="lede">Your cursor is a body among friends. Bump them. They will not mind.</p>
       </div>
     </section>
   );

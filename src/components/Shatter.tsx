@@ -143,10 +143,10 @@ export function Shatter() {
     <section ref={root} className="room shatter" id="shatter">
       <canvas ref={canvasRef} className="room-canvas" />
       <div className="room-copy invert">
-        <p className="kicker invert">Zero · hold gate</p>
-        <h2 className="display">Hold until it breaks.</h2>
+        <p className="kicker invert">A little pressure</p>
+        <h2 className="display">Hold until it lets go.</h2>
         <p className="lede invert">
-          Press and keep pressing. The pane loads, then shards take gravity.
+          Some weight only wants a patient hand. Keep holding. It will become light.
         </p>
         <button
           type="button"
@@ -155,7 +155,7 @@ export function Shatter() {
           onClick={start}
           disabled={broken}
         >
-          {broken ? "Shattered" : "Hold"}
+          {broken ? "Released" : "Hold"}
           <i ref={fillRef} />
         </button>
       </div>

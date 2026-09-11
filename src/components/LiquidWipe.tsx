@@ -49,9 +49,9 @@ export function LiquidWipe() {
           />
         </svg>
         <div className="wipe-body">
-          <p className="kicker invert">Slosh · liquid fill</p>
+          <p className="kicker invert">Let the ink cover you</p>
           <p className="wipe-copy">
-            The screen fills with ink. Under it, the table is already wet.
+            Under it, the table is already kind. You can make a mark without thinking.
           </p>
         </div>
       </div>

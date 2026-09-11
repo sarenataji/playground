@@ -66,15 +66,15 @@ export function Hero() {
   return (
     <section ref={root} className="hero" id="top">
       <canvas ref={blobRef} className="hero-blob" aria-hidden />
-      <p className="kicker">Studio playground · 001</p>
+      <p className="kicker">You can put the thoughts down</p>
       <h1 className="hero-title">
-        <span className="hero-line">Welcome to the</span>
+        <span className="hero-line">Leave the</span>
         <span className="hero-row">
-          <span className="hero-line play-word">playground</span>
+          <span className="hero-line play-word">thoughts</span>
           <Stamp />
         </span>
         <span className="hero-row of-row">
-          <span className="hero-line">of Sarena</span>
+          <span className="hero-line">outside</span>
           <svg className="hero-arrow" viewBox="0 0 48 72" fill="none" aria-hidden>
             <path
               d="M24 4 C18 22, 32 34, 22 52"
@@ -97,8 +97,8 @@ export function Hero() {
         </span>
       </h1>
       <p className="hero-lede">
-        A living mix of frost, blob, and liquid — one playground built from the
-        motion languages of Zero, Lando Norris, and Slosh.
+        This is a safe place. Motion will keep you company. Words will move so
+        your mind does not have to.
       </p>
     </section>
   );

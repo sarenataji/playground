@@ -139,9 +139,9 @@ export function Magnets() {
     <section ref={root} className="room magnets" id="magnets">
       <canvas ref={canvasRef} className="room-canvas" />
       <div className="room-copy invert">
-        <p className="kicker invert">Field · Coulomb</p>
-        <h2 className="display">Opposite rooms.</h2>
-        <p className="lede invert">Your pointer is a charge. Flip it.</p>
+        <p className="kicker invert">Come close, or make space</p>
+        <h2 className="display">Your hand is the weather.</h2>
+        <p className="lede invert">Draw things in, or give them room. Both are kindness.</p>
         <button
           type="button"
           className="text-btn invert"

@@ -16,7 +16,7 @@ type Body = {
   h: number;
 };
 
-const WORD = ["L", "O", "O", "S", "E"];
+const WORD = ["P", "E", "A", "C", "E"];
 
 export function GravityType() {
   const root = useRef<HTMLElement>(null);
@@ -142,9 +142,9 @@ export function GravityType() {
   return (
     <section ref={root} className="room gravity" id="gravity">
       <div className="room-copy">
-        <p className="kicker">Slosh · dancing type</p>
-        <h2 className="display">Type with weight.</h2>
-        <p className="lede">Drag a letter. The rest keep falling.</p>
+        <p className="kicker">Letters that can rest</p>
+        <h2 className="display">Let the word find the floor.</h2>
+        <p className="lede">Drag a letter. The others will settle when they are ready.</p>
       </div>
       <div ref={stage} className="gravity-stage">
         {WORD.map((ch, i) => (

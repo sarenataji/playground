@@ -9,27 +9,27 @@ gsap.registerPlugin(ScrollTrigger);
 const studies = [
   {
     n: "01",
-    title: "Frost gate",
-    tag: "Zero",
-    body: "Gesture as door. Signed winding, roundness, closure — then a melt from the centroid.",
+    title: "The door",
+    tag: "Heart",
+    body: "A heart is enough to enter. Frost listens, then yields. You do not have to knock twice.",
   },
   {
     n: "02",
-    title: "Blob crop",
-    tag: "Lando",
-    body: "Metaballs decide what you see. The stamp tilts with the pointer. Type is a crop, not a box.",
+    title: "The crop",
+    tag: "Soft",
+    body: "The world arrives in round shapes, not boxes. Edges that breathe so the mind can too.",
   },
   {
     n: "03",
-    title: "Liquid wipe",
-    tag: "Slosh",
-    body: "Ink climbs the viewport as you scroll. The next room is behind the meniscus.",
+    title: "The wash",
+    tag: "Ink",
+    body: "Ink rises so you can sink. The next room is already wet, already waiting.",
   },
   {
     n: "04",
-    title: "Ink table",
-    tag: "Function",
-    body: "A GPU fluid you can play. Drag to paint, click to dump, type ink for a flood.",
+    title: "The table",
+    tag: "Play",
+    body: "Paint without a purpose. Flood the page if you want. There is no wrong mark here.",
   },
 ];
 
@@ -56,8 +56,8 @@ export function Studies() {
   return (
     <section ref={root} className="studies" id="studies">
       <div className="section-head">
-        <p className="kicker">Rooms in the playground</p>
-        <h2 className="display">Hold a study to open it.</h2>
+        <p className="kicker">Rooms that wait for you</p>
+        <h2 className="display">Hold a room until it opens.</h2>
       </div>
       <div className="study-grid">
         {studies.map((s) => (

@@ -11,7 +11,7 @@ export function Gate({ onUnlock }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const points = useRef<Point[]>([]);
   const drawing = useRef(false);
-  const [hint, setHint] = useState("Draw a heart to enter");
+  const [hint, setHint] = useState("Draw a heart. Come in.");
   const unlocking = useRef(false);
 
   useEffect(() => {
@@ -73,10 +73,10 @@ export function Gate({ onUnlock }: Props) {
       drawing.current = false;
       if (isHeart(points.current)) {
         unlocking.current = true;
-        setHint("The frost is melting");
+        setHint("The quiet is opening");
         playUnlockChime();
       } else {
-        setHint("Close the loop — two lobes, a point");
+        setHint("Unhurried — two curves, then home");
         window.setTimeout(() => {
           if (!unlocking.current) points.current = [];
         }, 420);
@@ -99,13 +99,13 @@ export function Gate({ onUnlock }: Props) {
   }, [onUnlock]);
 
   return (
-    <section className="gate" aria-label="Enter the playground">
+    <section className="gate" aria-label="Enter a quiet place">
       <canvas ref={canvasRef} className="gate-canvas" />
       <div className="gate-copy">
-        <p className="gate-kicker">Sarena · playground 001</p>
+        <p className="gate-kicker">You are welcome here</p>
         <p className="gate-hint">{hint}</p>
         <button type="button" className="text-btn" onClick={onUnlock}>
-          Skip the ritual
+          I am already home
         </button>
       </div>
     </section>

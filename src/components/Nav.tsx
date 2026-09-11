@@ -5,9 +5,9 @@ export function Nav() {
         Sarena
       </a>
       <nav>
-        <a href="#system">System</a>
-        <a href="#shatter">Physics</a>
-        <a href="#play">Play</a>
+        <a href="#system">Rest</a>
+        <a href="#shatter">Motion</a>
+        <a href="#play">Touch</a>
       </nav>
     </header>
   );

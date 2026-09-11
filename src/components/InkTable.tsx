@@ -14,15 +14,15 @@ export function InkTable() {
       onPointerLeave={() => setOverTable(false)}
     >
       <div className="section-head">
-        <p className="kicker">The function</p>
-        <h2 className="display">Ink table.</h2>
+        <p className="kicker">A place to play without thinking</p>
+        <h2 className="display">Leave a mark. Or don’t.</h2>
         <p className="lede">
-          This is the toy the rest of the site is made from. Drag to paint.
-          Click to dump a splash. Type <kbd>ink</kbd> anywhere for a flood.
+          Drag to paint. Click to splash. Type <kbd>ink</kbd> anywhere if you
+          want the page to flood. There is no score.
         </p>
       </div>
       <div className="table-well">
-        <p>The cursor is the medium. Stay here and slosh.</p>
+        <p>Stay as long as you like. The ink will wait.</p>
       </div>
     </section>
   );

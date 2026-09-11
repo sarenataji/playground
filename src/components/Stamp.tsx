@@ -43,7 +43,7 @@ export function Stamp() {
         </defs>
         <text className="stamp-type">
           <textPath href="#stampArc" startOffset="0%">
-            SARENA’S STUDIO · PLAYGROUND · SARENA’S STUDIO ·
+            YOU ARE SAFE HERE · REST · YOU ARE SAFE HERE ·
           </textPath>
         </text>
       </svg>

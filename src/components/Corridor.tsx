@@ -7,11 +7,11 @@ import { prefersReducedMotion } from "@/lib/motion";
 gsap.registerPlugin(ScrollTrigger);
 
 const panels = [
-  { title: "Frost", note: "Gesture as door", tone: "#ebe4d8" },
-  { title: "Blob", note: "Crop is identity", tone: "#d9cfc0" },
-  { title: "Slosh", note: "Medium is the product", tone: "#c45c26" },
-  { title: "Charge", note: "Pull or push", tone: "#1c1714" },
-  { title: "Lattice", note: "Everything is connected", tone: "#e8e2d6" },
+  { title: "Enough", note: "You already are", tone: "#ebe4d8" },
+  { title: "Quiet", note: "Thoughts can wait", tone: "#d9cfc0" },
+  { title: "Held", note: "Nothing to prove", tone: "#c45c26" },
+  { title: "Stay", note: "There is time", tone: "#1c1714" },
+  { title: "Home", note: "Everything is connected", tone: "#e8e2d6" },
 ];
 
 export function Corridor() {
@@ -41,8 +41,8 @@ export function Corridor() {
     <section ref={root} className="corridor" id="corridor">
       <div className="corridor-pin">
         <div className="corridor-head">
-          <p className="kicker invert">Lando · sideways</p>
-          <h2 className="display">A corridor, not a page.</h2>
+          <p className="kicker invert">Words that walk with you</p>
+          <h2 className="display">A hallway of quiet.</h2>
         </div>
         <div className="corridor-track">
           {panels.map((p) => (

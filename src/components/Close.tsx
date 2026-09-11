@@ -28,8 +28,8 @@ export function Close() {
 
   return (
     <footer ref={root} className="close" id="close">
-      <p className="kicker">Until the next room</p>
-      <p className="display close-title">Stay and play.</p>
+      <p className="kicker">The thoughts can stay outside</p>
+      <p className="display close-title">You can come back.</p>
       <svg className="signature" viewBox="0 0 420 140" fill="none" aria-label="Sarena">
         <path
           className="sig-path"
@@ -43,8 +43,7 @@ export function Close() {
         />
       </svg>
       <p className="close-note">
-        A new studio site for Sarena. Work still to land — the playground is
-        the first function.
+        This room will be here. Come rest whenever the mind is loud.
       </p>
     </footer>
   );

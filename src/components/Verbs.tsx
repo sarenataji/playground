@@ -8,19 +8,19 @@ gsap.registerPlugin(ScrollTrigger);
 
 const verbs = [
   {
-    from: "Zero",
-    verb: "Draw",
-    copy: "A closed loop unlocks the room. Frost spreads from the stroke, then melts. Hold gates later in the scroll pause the story until you mean it.",
+    from: "A pause",
+    verb: "Rest",
+    copy: "Nothing is asked of you. Sit with the motion. Let the page do the thinking for a while.",
   },
   {
-    from: "Lando",
-    verb: "Blob",
-    copy: "Organic masks, pointer-tracked 3D, and a drawn signature. The crop is the identity — circles and metaballs instead of rectangles.",
+    from: "A breath",
+    verb: "Soften",
+    copy: "Hold, drag, watch things fall. The body of the site is gentle. You do not have to finish anything.",
   },
   {
-    from: "Slosh",
-    verb: "Slosh",
-    copy: "The product is the medium. Ink fills the page, rides your cursor, and becomes a table you can actually paint on.",
+    from: "A stay",
+    verb: "Stay",
+    copy: "Ink listens. Letters have weight. A heart opened the door. This room will wait as long as you need.",
   },
 ];
 
@@ -43,7 +43,7 @@ export function Verbs() {
 
   return (
     <section ref={root} className="verbs" id="system">
-      <p className="kicker">Three verbs, one material</p>
+      <p className="kicker">Three ways to be here</p>
       <div className="verb-grid">
         {verbs.map((v) => (
           <article key={v.verb} className="verb-card">

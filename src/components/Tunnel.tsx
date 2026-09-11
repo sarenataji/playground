@@ -82,9 +82,9 @@ export function Tunnel() {
     <section ref={root} className="room tunnel" id="tunnel">
       <canvas ref={canvasRef} className="room-canvas" />
       <div className="room-copy invert">
-        <p className="kicker invert">Zero · tunnel</p>
-        <h2 className="display">Scroll is a depth.</h2>
-        <p className="lede invert">Rings are a single number. Wheel to travel them.</p>
+        <p className="kicker invert">Depth without hurry</p>
+        <h2 className="display">There is no destination.</h2>
+        <p className="lede invert">Wheel through the rings. You are already where you need to be.</p>
       </div>
     </section>
   );
