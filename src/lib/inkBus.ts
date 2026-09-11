@@ -25,3 +25,7 @@ export function setOverTable(v: boolean) {
 export function isOverTable() {
   return overTable;
 }
+
+export function tintInk(rgb: [number, number, number]) {
+  if (fluid) fluid.color = rgb;
+}

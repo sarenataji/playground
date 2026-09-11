@@ -6,8 +6,8 @@ export function Nav() {
       </a>
       <nav>
         <a href="#system">System</a>
-        <a href="#studies">Rooms</a>
-        <a href="#play">Ink</a>
+        <a href="#shatter">Physics</a>
+        <a href="#play">Play</a>
       </nav>
     </header>
   );

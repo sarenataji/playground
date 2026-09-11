@@ -69,6 +69,8 @@ button {
   z-index: 1;
   opacity: 0;
   pointer-events: none;
+  width: 100%;
+  max-width: 100%;
 }
 
 .site.is-open {
@@ -446,6 +448,176 @@ kbd {
   font-size: 0.72rem;
   border-bottom: 1px solid var(--ink);
   padding: 0 0 0.2rem;
+}
+
+.lede.invert {
+  color: #cfc6ba;
+}
+
+.room {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+.room-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.room-copy {
+  position: relative;
+  z-index: 2;
+  padding: 12vh 7vw;
+  max-width: 40rem;
+  pointer-events: none;
+}
+
+.room-copy .hold-btn,
+.room-copy .text-btn {
+  pointer-events: auto;
+}
+
+.hold-btn {
+  position: relative;
+  margin-top: 1.4rem;
+  overflow: hidden;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid rgba(243, 238, 230, 0.5);
+  color: var(--paper);
+}
+
+.hold-btn i {
+  position: absolute;
+  inset: 0;
+  background: var(--ember);
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: -1;
+}
+
+.shatter {
+  background: #1a100e;
+  color: var(--paper);
+}
+
+.gravity {
+  background: var(--paper);
+}
+
+.gravity-stage {
+  position: relative;
+  height: 58vh;
+  margin: 0 4vw 8vh;
+  border: 1px dashed color-mix(in srgb, var(--ink) 18%, transparent);
+  overflow: hidden;
+  touch-action: none;
+}
+
+.g-letter {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(4.5rem, 12vw, 9rem);
+  line-height: 1;
+  user-select: none;
+  cursor: grab;
+  will-change: transform;
+}
+
+.g-letter:active {
+  cursor: grabbing;
+}
+
+.magnets {
+  background: #0d1116;
+  color: var(--paper);
+}
+
+.text-btn.invert {
+  border-bottom-color: var(--paper);
+  margin-top: 1rem;
+  color: var(--paper);
+}
+
+.corridor {
+  background: #111;
+  color: var(--paper);
+  height: 100svh;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+.corridor-pin {
+  height: 100svh;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.corridor-head {
+  padding: 0 7vw 4vh;
+}
+
+.corridor-track {
+  display: flex;
+  gap: 1.4rem;
+  padding: 0 7vw;
+  width: max-content;
+}
+
+.corridor-panel {
+  width: min(72vw, 520px);
+  height: 48vh;
+  border-radius: 46% 38% 44% 36% / 36% 44% 34% 48%;
+  padding: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: none;
+}
+
+.corridor-panel h3 {
+  font-family: var(--display);
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 500;
+  margin: 0.4rem 0 0;
+  font-style: italic;
+}
+
+.springs {
+  background: #e7e0d4;
+}
+
+.springs .room-canvas {
+  touch-action: none;
+}
+
+.tunnel {
+  background: #070707;
+  color: var(--paper);
+}
+
+.arena {
+  background: #c9ddd6;
+}
+
+.arena .room-canvas {
+  touch-action: none;
 }
 
 @media (max-width: 860px) {

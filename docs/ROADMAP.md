@@ -42,11 +42,25 @@ Hero copy, matching the attached frame:
    ↓
 [VERBS] three columns: Draw / Blob / Slosh
    ↓
-[STUDIES] four work rooms, each a live toy, revealed through blobs
+[SHATTER] hold gate, glass shards + gravity
    ↓
-[INK TABLE] the function — paint, hold to dump, keys to tint
+[GRAVITY TYPE] falling / draggable letters
    ↓
-[CLOSE] signature stroke + stamp + contact
+[MAGNETS] Coulomb field, pull / push
+   ↓
+[CORRIDOR] pinned sideways blob panels
+   ↓
+[STUDIES] four work rooms
+   ↓
+[SPRINGS] lattice you can tug
+   ↓
+[TUNNEL] scroll as depth
+   ↓
+[INK TABLE] GPU fluid
+   ↓
+[ARENA] colliding bodies
+   ↓
+[CLOSE] signature stroke
 ```
 
 Lenis + GSAP ticker. Fluid and Three.js run on the same `gsap.ticker` / rAF so DOM and WebGL do not drift (the HAOQI / Trionn lesson).

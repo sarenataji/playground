@@ -7,8 +7,15 @@ import { Nav } from "./components/Nav";
 import { Hero } from "./components/Hero";
 import { Verbs } from "./components/Verbs";
 import { Studies } from "./components/Studies";
+import { Shatter } from "./components/Shatter";
+import { GravityType } from "./components/GravityType";
+import { Magnets } from "./components/Magnets";
+import { Corridor } from "./components/Corridor";
+import { Springs } from "./components/Springs";
+import { Tunnel } from "./components/Tunnel";
 import { LiquidWipe } from "./components/LiquidWipe";
 import { InkTable } from "./components/InkTable";
+import { Arena } from "./components/Arena";
 import { Close } from "./components/Close";
 import { InkLayer } from "./components/InkLayer";
 import { bindPointer } from "./lib/pointer";
@@ -70,9 +77,16 @@ export default function App() {
         <Nav />
         <Hero />
         <Verbs />
+        <Shatter />
+        <GravityType />
+        <Magnets />
+        <Corridor />
         <Studies />
+        <Springs />
+        <Tunnel />
         <LiquidWipe />
         <InkTable />
+        <Arena />
         <Close />
       </div>
     </>
