@@ -22,7 +22,10 @@ export function Arena() {
     if (!ctx) return;
 
     let balls: Ball[] = [];
-    const colors = ["#16332c", "#d4784a", "#2f6b5d", "#f3eee6", "#e8c9a0", "#5f8a72"];
+    const classic = Boolean(canvas.closest(".scroll-home"));
+    const colors = classic
+      ? ["#161412", "#c45c26", "#2c5a52", "#f3eee6", "#8a8175"]
+      : ["#16332c", "#d4784a", "#2f6b5d", "#f3eee6", "#e8c9a0", "#5f8a72"];
 
     const resize = () => {
       const dpr = Math.min(1.5, window.devicePixelRatio || 1);
@@ -51,7 +54,8 @@ export function Arena() {
     const tick = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--paper").trim() || "#cfe3dc";
+      ctx.fillStyle =
+        getComputedStyle(canvas).getPropertyValue("--paper").trim() || "#cfe3dc";
       ctx.fillRect(0, 0, w, h);
 
       const px = pointer.nx * w;

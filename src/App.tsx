@@ -33,8 +33,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 function RouteBody({ path }: { path: string }) {
   switch (path) {
+    case "/":
     case "/playground":
       return <OriginalHome />;
+    case "/rooms":
+      return <Home />;
     case "/breathe":
       return (
         <RoomPage>
@@ -120,7 +123,7 @@ function RouteBody({ path }: { path: string }) {
         </RoomPage>
       );
     default:
-      return <Home />;
+      return <OriginalHome />;
   }
 }
 
@@ -199,8 +202,12 @@ export default function App() {
     <>
       {!open && <Gate onUnlock={unlock} />}
       <InkLayer active={open} />
-      <div className={`site${open ? " is-open" : ""}${room.invert ? " is-invert" : ""}`}>
-        <Atmosphere />
+      <div
+        className={`site${open ? " is-open" : ""}${room.invert ? " is-invert" : ""}${
+          path === "/" || path === "/playground" ? " is-scroll-home" : ""
+        }`}
+      >
+        {path !== "/" && path !== "/playground" && <Atmosphere />}
         <Nav />
         <RouteBody path={path} />
       </div>

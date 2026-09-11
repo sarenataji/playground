@@ -21,21 +21,6 @@ export const rooms: Room[] = [
     name: "Home",
     verb: "Arrive",
     note: "A clear place to land",
-    paper: "#f3f0e8",
-    ink: "#1a221c",
-    dust: "#7a8478",
-    accent: "#5f8a72",
-    bloom: "#e8cfc0",
-    sky: "#cfe0da",
-    invert: false,
-    inkRgb: [0.22, 0.32, 0.26],
-  },
-  {
-    path: "/playground",
-    id: "playground",
-    name: "Playground",
-    verb: "Scroll",
-    note: "The first long page, all in one place",
     paper: "#f3eee6",
     ink: "#161412",
     dust: "#8a8175",
@@ -44,6 +29,21 @@ export const rooms: Room[] = [
     sky: "#efe4cc",
     invert: false,
     inkRgb: [0.09, 0.07, 0.05],
+  },
+  {
+    path: "/rooms",
+    id: "rooms",
+    name: "Rooms",
+    verb: "Wander",
+    note: "Fourteen rooms, fourteen weathers",
+    paper: "#f3f0e8",
+    ink: "#1a221c",
+    dust: "#7a8478",
+    accent: "#5f8a72",
+    bloom: "#e8cfc0",
+    sky: "#cfe0da",
+    invert: false,
+    inkRgb: [0.22, 0.32, 0.26],
   },
   {
     path: "/breathe",
@@ -268,4 +268,4 @@ export function nextRoom(path: string) {
   return rooms[(i + 1) % rooms.length];
 }
 
-export const destinations = rooms.filter((r) => r.id !== "home");
+export const destinations = rooms.filter((r) => r.id !== "home" && r.id !== "rooms");

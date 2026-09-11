@@ -15,7 +15,15 @@ const panels = [
   { title: "Home", note: "Everything is connected", tone: "#efe4cc", ink: "#2a2214" },
 ];
 
-export function Corridor() {
+const classicPanels = [
+  { title: "Enough", note: "You already are", tone: "#ebe4d8", ink: "#161412" },
+  { title: "Quiet", note: "Thoughts can wait", tone: "#d9cfc0", ink: "#161412" },
+  { title: "Held", note: "Nothing to prove", tone: "#c45c26", ink: "#f3eee6" },
+  { title: "Stay", note: "There is time", tone: "#1c1714", ink: "#f3eee6" },
+  { title: "Home", note: "Everything is connected", tone: "#e8e2d6", ink: "#161412" },
+];
+
+export function Corridor({ classic = false }: { classic?: boolean }) {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -47,7 +55,7 @@ export function Corridor() {
           <h2 className="display">A hallway of quiet.</h2>
         </div>
         <div className="corridor-track">
-          {panels.map((p) => (
+          {(classic ? classicPanels : panels).map((p) => (
             <article
               key={p.title}
               className="corridor-panel"

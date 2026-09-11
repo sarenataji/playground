@@ -3,8 +3,8 @@ import { usePath } from "@/lib/path";
 import { roomByPath } from "@/lib/rooms";
 import { MapOverlay } from "./MapOverlay";
 
-const LINKS = [
-  { href: "/playground", label: "Playground" },
+const ROOM_LINKS = [
+  { href: "/rooms", label: "Rooms" },
   { href: "/breathe", label: "Breathe" },
   { href: "/dawn", label: "Dawn" },
   { href: "/pond", label: "Pond" },
@@ -15,10 +15,27 @@ export function Nav() {
   const path = usePath();
   const room = roomByPath(path);
   const [mapOpen, setMapOpen] = useState(false);
+  const onHome = path === "/" || path === "/playground";
 
   useEffect(() => {
     setMapOpen(false);
   }, [path]);
+
+  if (onHome) {
+    return (
+      <header className="nav">
+        <a className="nav-mark" href="#top">
+          Sarena
+        </a>
+        <nav>
+          <a href="#system">Rest</a>
+          <a href="#shatter">Motion</a>
+          <a href="#play">Touch</a>
+          <a href="/rooms">Rooms</a>
+        </nav>
+      </header>
+    );
+  }
 
   return (
     <>
@@ -27,7 +44,7 @@ export function Nav() {
           Sarena
         </a>
         <nav>
-          {LINKS.map((l) => (
+          {ROOM_LINKS.map((l) => (
             <a key={l.href} href={l.href} aria-current={path === l.href ? "page" : undefined}>
               {l.label}
             </a>

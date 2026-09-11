@@ -14,13 +14,13 @@ import { Close } from "@/components/Close";
 
 export function OriginalHome() {
   return (
-    <>
+    <div className="scroll-home">
       <Hero variant="original" />
       <Verbs linked={false} />
       <Shatter />
       <GravityType />
       <Magnets />
-      <Corridor />
+      <Corridor classic />
       <Studies />
       <Springs />
       <Tunnel />
@@ -28,6 +28,6 @@ export function OriginalHome() {
       <InkTable />
       <Arena />
       <Close />
-    </>
+    </div>
   );
 }

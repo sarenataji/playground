@@ -1,7 +1,7 @@
 :root {
-  --paper: #f3f0e8;
-  --ink: #1a221c;
-  --dust: #7a8478;
+  --paper: #f3eee6;
+  --ink: #161412;
+  --dust: #8a8175;
   --accent: #5f8a72;
   --bloom: #e8cfc0;
   --sky: #cfe0da;
@@ -991,6 +991,211 @@ kbd {
 
   body {
     cursor: auto;
+  }
+}
+
+.site.is-scroll-home .nav {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 0;
+  mix-blend-mode: multiply;
+  padding: 1.25rem 4vw;
+  min-height: 0;
+}
+
+.site.is-scroll-home .nav-mark {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.35rem;
+  letter-spacing: 0;
+}
+
+.scroll-home {
+  --paper: #f3eee6;
+  --ink: #161412;
+  --dust: #8a8175;
+  --ember: #c45c26;
+}
+
+.scroll-home .hero {
+  min-height: 100svh;
+  padding: 8vh 7vw 12vh;
+  justify-content: flex-start;
+}
+
+.scroll-home .hero-title {
+  display: block;
+  font-size: clamp(2.8rem, 8.4vw, 7.8rem);
+  line-height: 0.92;
+}
+
+.scroll-home .hero-line {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.scroll-home .hero-row {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+.scroll-home .stamp {
+  position: relative;
+  width: clamp(6.5rem, 12vw, 9.5rem);
+  height: clamp(6.5rem, 12vw, 9.5rem);
+  flex: none;
+  margin: 0 0 0.4rem auto;
+}
+
+.scroll-home .verbs,
+.scroll-home .studies,
+.scroll-home .table,
+.scroll-home .close {
+  padding: 12vh 7vw;
+}
+
+.scroll-home .room {
+  min-height: 100svh;
+  display: block;
+}
+
+.scroll-home .room-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  flex: none;
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.scroll-home .well {
+  margin: 0;
+  width: 100%;
+  border-radius: 0;
+  border: 0;
+}
+
+.scroll-home .room-copy {
+  padding: 12vh 7vw;
+  max-width: 40rem;
+}
+
+.scroll-home .hold-btn {
+  border: 1px solid rgba(243, 238, 230, 0.5);
+  color: var(--paper);
+}
+
+.scroll-home .hold-btn i {
+  background: var(--ember);
+}
+
+.scroll-home .shatter {
+  background: #1a100e;
+  color: var(--paper);
+}
+
+.scroll-home .gravity {
+  background: var(--paper);
+}
+
+.scroll-home .gravity-stage {
+  margin: 0 4vw 8vh;
+  border: 1px dashed color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.scroll-home .magnets {
+  background: #0d1116;
+  color: var(--paper);
+}
+
+.scroll-home .text-btn.invert {
+  border-bottom-color: var(--paper);
+  color: var(--paper);
+}
+
+.scroll-home .corridor {
+  background: #111;
+  color: var(--paper);
+  height: 100svh;
+  min-height: 100svh;
+}
+
+.scroll-home .corridor-head {
+  padding: 0 7vw 4vh;
+}
+
+.scroll-home .corridor-track {
+  padding: 0 7vw;
+}
+
+.scroll-home .springs {
+  background: #e7e0d4;
+}
+
+.scroll-home .tunnel {
+  background: #070707;
+  color: var(--paper);
+}
+
+.scroll-home .arena {
+  --paper: #c9ddd6;
+  background: #c9ddd6;
+}
+
+.scroll-home .table-well {
+  margin: 0;
+  width: auto;
+  min-height: 55vh;
+  border-radius: 48% 42% 46% 40% / 40% 48% 38% 52%;
+  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  background: transparent;
+}
+
+.scroll-home .study {
+  background: #ebe4d8;
+}
+
+.scroll-home .study.is-open {
+  background: #161412;
+}
+
+.scroll-home .study-blob {
+  background: radial-gradient(circle at 30% 30%, #d9cfc0, #c4b8a6 62%, transparent 63%);
+}
+
+.scroll-home .study.is-open .study-blob {
+  background: radial-gradient(circle at 30% 30%, #c45c26, #8a3a16 62%, transparent 63%);
+}
+
+.scroll-home .kicker.invert {
+  color: #cfc6ba;
+}
+
+.scroll-home .lede.invert {
+  color: #cfc6ba;
+}
+
+@media (max-width: 860px) {
+  .scroll-home .hero-title {
+    font-size: clamp(2.35rem, 11.5vw, 3.4rem);
+  }
+
+  .scroll-home .stamp {
+    position: static;
+    width: 5.6rem;
+    height: 5.6rem;
+    margin: 0.6rem 0 0 auto;
+  }
+
+  .site.is-scroll-home .nav nav a:nth-of-type(3),
+  .site.is-scroll-home .nav nav a:nth-of-type(4) {
+    display: inline;
   }
 }
 
