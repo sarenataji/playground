@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { isClosedLoop, type Point } from "@/lib/loop";
+import { isHeart, type Point } from "@/lib/loop";
 import { playUnlockChime } from "@/lib/chime";
 import { prefersReducedMotion } from "@/lib/motion";
 
@@ -11,7 +11,7 @@ export function Gate({ onUnlock }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const points = useRef<Point[]>([]);
   const drawing = useRef(false);
-  const [hint, setHint] = useState("Draw a circle to enter");
+  const [hint, setHint] = useState("Draw a heart to enter");
   const unlocking = useRef(false);
 
   useEffect(() => {
@@ -71,12 +71,12 @@ export function Gate({ onUnlock }: Props) {
     const up = () => {
       if (!drawing.current || unlocking.current) return;
       drawing.current = false;
-      if (isClosedLoop(points.current)) {
+      if (isHeart(points.current)) {
         unlocking.current = true;
         setHint("The frost is melting");
         playUnlockChime();
       } else {
-        setHint("Close the loop — a circle, an O, a stamp");
+        setHint("Close the loop — two lobes, a point");
         window.setTimeout(() => {
           if (!unlocking.current) points.current = [];
         }, 420);

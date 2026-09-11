@@ -2,52 +2,57 @@ import { dist } from "./motion";
 
 export type Point = { x: number; y: number };
 
-/** Zero-style closed-loop test, loosened so a human circle still unlocks. */
-export function isClosedLoop(points: Point[]): boolean {
-  if (points.length < 18) return false;
+/** Closed heart: two upper lobes and a pointed base, loosened for a finger stroke. */
+export function isHeart(points: Point[]): boolean {
+  if (points.length < 22) return false;
 
-  let cx = 0;
-  let cy = 0;
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
   for (const p of points) {
-    cx += p.x;
-    cy += p.y;
+    minX = Math.min(minX, p.x);
+    maxX = Math.max(maxX, p.x);
+    minY = Math.min(minY, p.y);
+    maxY = Math.max(maxY, p.y);
   }
-  cx /= points.length;
-  cy /= points.length;
 
-  const radii = points.map((p) => dist(p.x, p.y, cx, cy));
-  const mean = radii.reduce((a, b) => a + b, 0) / radii.length;
-  if (mean < 28) return false;
-
-  const variance =
-    radii.reduce((a, r) => a + (r - mean) ** 2, 0) / radii.length;
-  const cv = Math.sqrt(variance) / mean;
+  const w = maxX - minX;
+  const h = maxY - minY;
+  if (w < 36 || h < 36) return false;
+  const aspect = w / h;
+  if (aspect < 0.45 || aspect > 1.85) return false;
 
   const closed = dist(points[0].x, points[0].y, points.at(-1)!.x, points.at(-1)!.y);
-  const wound = Math.abs(signedAngle(points, cx, cy));
+  if (closed > Math.min(w, h) * 0.5) return false;
 
-  let length = 0;
-  for (let i = 1; i < points.length; i++) {
-    length += dist(points[i].x, points[i].y, points[i - 1].x, points[i - 1].y);
+  const midX = (minX + maxX) / 2;
+  const lowest = points.reduce((a, p) => (p.y > a.y ? p : a));
+  if (Math.abs(lowest.x - midX) > w * 0.38) return false;
+  if (lowest.y < minY + h * 0.72) return false;
+
+  let leftTop: Point | null = null;
+  let rightTop: Point | null = null;
+  for (const p of points) {
+    if (p.x < midX) {
+      if (!leftTop || p.y < leftTop.y) leftTop = p;
+    } else {
+      if (!rightTop || p.y < rightTop.y) rightTop = p;
+    }
   }
+  if (!leftTop || !rightTop) return false;
+  if (leftTop.y > minY + h * 0.38 || rightTop.y > minY + h * 0.38) return false;
+  if (rightTop.x - leftTop.x < w * 0.22) return false;
 
-  return (
-    wound > 4.2 &&
-    cv < 0.55 &&
-    closed < mean * 0.65 &&
-    length > mean * 3.4
-  );
-}
-
-function signedAngle(points: Point[], cx: number, cy: number) {
-  let total = 0;
-  for (let i = 1; i < points.length; i++) {
-    const a = Math.atan2(points[i - 1].y - cy, points[i - 1].x - cx);
-    const b = Math.atan2(points[i].y - cy, points[i].x - cx);
-    let d = b - a;
-    while (d > Math.PI) d -= Math.PI * 2;
-    while (d < -Math.PI) d += Math.PI * 2;
-    total += d;
+  const cleftTop = minY + h * 0.42;
+  let cleft = 0;
+  for (const p of points) {
+    if (Math.abs(p.x - midX) < w * 0.22 && p.y < cleftTop) {
+      cleft = Math.max(cleft, p.y);
+    }
   }
-  return total;
+  const lobeY = Math.max(leftTop.y, rightTop.y);
+  if (cleft - lobeY < h * 0.04) return false;
+
+  return true;
 }
