@@ -48,6 +48,7 @@ export class InkFluid {
   splatRadius = 0.00028;
   splatForce = 42;
   color: InkColor = [0.09, 0.07, 0.05];
+  target: InkColor = [0.09, 0.07, 0.05];
   private disposed = false;
   enabled = true;
 
@@ -231,6 +232,10 @@ export class InkFluid {
 
   step() {
     if (this.disposed || !this.enabled) return;
+    const k = 0.048;
+    this.color[0] += (this.target[0] - this.color[0]) * k;
+    this.color[1] += (this.target[1] - this.color[1]) * k;
+    this.color[2] += (this.target[2] - this.color[2]) * k;
     this.resize();
     const dt = 0.016;
     const simTexel = [1 / this.simW, 1 / this.simW] as const;
@@ -306,9 +311,7 @@ export class InkFluid {
 
   destroy() {
     this.disposed = true;
-    const gl = this.gl;
-    const lose = gl.getExtension("WEBGL_lose_context");
-    lose?.loseContext();
+    this.enabled = false;
   }
 
   private display() {

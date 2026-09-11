@@ -15,7 +15,7 @@ export function Tunnel() {
   const live = useInView(root);
 
   useEffect(() => {
-    if (live) tintInk([0.9, 0.86, 0.78]);
+    if (live) tintInk([0.9, 0.86, 0.78], true);
   }, [live]);
 
   useGSAP(

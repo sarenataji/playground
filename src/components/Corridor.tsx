@@ -1,8 +1,10 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useInView } from "@/lib/useInView";
+import { tintInk } from "@/lib/inkBus";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,6 +27,11 @@ const classicPanels = [
 
 export function Corridor({ classic = false }: { classic?: boolean }) {
   const root = useRef<HTMLElement>(null);
+  const live = useInView(root);
+
+  useEffect(() => {
+    if (live) tintInk([0.09, 0.07, 0.05], true);
+  }, [live]);
 
   useGSAP(
     () => {

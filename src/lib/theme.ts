@@ -13,7 +13,7 @@ export function applyTheme(room: Room) {
   document.body.style.background = room.paper;
   document.body.style.color = room.ink;
   document.title = `${room.name} · Sarena`;
-  tintInk(room.inkRgb);
+  tintInk(room.inkRgb, room.invert);
 }
 
 export function cssVar(name: string) {

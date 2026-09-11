@@ -22,9 +22,18 @@ export function InkLayer({ active }: { active: boolean }) {
     let keys = "";
     let raf = 0;
 
+    const point = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.max(1, rect.width);
+      const h = Math.max(1, rect.height);
+      return {
+        x: (e.clientX - rect.left) / w,
+        y: (e.clientY - rect.top) / h,
+      };
+    };
+
     const onMove = (e: PointerEvent) => {
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
+      const { x, y } = point(e);
       const now = performance.now();
       const dt = Math.max(8, now - last.t);
       const dx = (e.clientX - last.x) / dt;
@@ -40,8 +49,7 @@ export function InkLayer({ active }: { active: boolean }) {
     const onDown = (e: PointerEvent) => {
       if (!isOverTable()) return;
       if (e.pointerType === "mouse" && e.button !== 0) return;
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
+      const { x, y } = point(e);
       fluid.dump(x, y);
     };
 

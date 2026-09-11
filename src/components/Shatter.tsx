@@ -50,7 +50,7 @@ export function Shatter() {
   const progress = useRef(0);
 
   useEffect(() => {
-    if (live) tintInk([0.18, 0.05, 0.03]);
+    if (live) tintInk([0.18, 0.05, 0.03], true);
   }, [live]);
 
   useEffect(() => {

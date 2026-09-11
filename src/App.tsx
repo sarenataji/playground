@@ -201,7 +201,6 @@ export default function App() {
   return (
     <>
       {!open && <Gate onUnlock={unlock} />}
-      <InkLayer active={open} />
       <div
         className={`site${open ? " is-open" : ""}${room.invert ? " is-invert" : ""}${
           path === "/" || path === "/playground" ? " is-scroll-home" : ""
@@ -211,6 +210,7 @@ export default function App() {
         <Nav />
         <RouteBody path={path} />
       </div>
+      <InkLayer active={open} />
     </>
   );
 }

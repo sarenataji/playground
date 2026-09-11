@@ -23,7 +23,7 @@ export function Magnets() {
   modeRef.current = mode;
 
   useEffect(() => {
-    if (live) tintInk([0.55, 0.35, 0.12]);
+    if (live) tintInk([0.55, 0.35, 0.12], true);
   }, [live]);
 
   useEffect(() => {
