@@ -622,14 +622,44 @@ button {
 }
 
 .corridor-panel {
+  position: relative;
   width: min(72vw, 520px);
   height: 48vh;
   border-radius: 46% 38% 44% 36% / 36% 44% 34% 48%;
-  padding: 2.2rem;
+  padding: 2.4rem 3.2rem 3.6rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   flex: none;
+  overflow: visible;
+  cursor: pointer;
+  transform-origin: 50% 60%;
+  touch-action: manipulation;
+  user-select: none;
+  isolation: isolate;
+}
+
+.corridor-panel:focus-visible {
+  outline: 2px solid color-mix(in srgb, currentColor 55%, transparent);
+  outline-offset: 10px;
+}
+
+.corridor-bloom {
+  position: absolute;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, currentColor 28%, transparent), transparent 68%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.corridor-panel .kicker,
+.corridor-panel h3 {
+  position: relative;
+  z-index: 1;
 }
 
 .corridor-panel h3 {
@@ -638,6 +668,13 @@ button {
   font-weight: 500;
   margin: 0.4rem 0 0;
   font-style: italic;
+  line-height: 1.18;
+  overflow: visible;
+  padding-bottom: 0.18em;
+}
+
+.corridor-letter {
+  display: inline-block;
 }
 
 .springs .room-canvas,
