@@ -1,6 +1,6 @@
 /**
- * Compact WebGL2 stable-fluids ink solver.
- * Velocity + dye ping-pong, splat / advect / pressure, display as premultiplied ink.
+ * Compact WebGL2 stable-fluids ink solver with obstacle avoidance.
+ * Velocity + dye ping-pong, splat / advect / pressure / deflect, display as premultiplied ink.
  */
 
 const VERT = `#version 300 es
@@ -49,6 +49,7 @@ export class InkFluid {
   splatForce = 42;
   color: InkColor = [0.09, 0.07, 0.05];
   target: InkColor = [0.09, 0.07, 0.05];
+  obstacle: [number, number, number, number] = [0, 0, 0, 0]; // [cx, cy, radius_aspect, enabled]
   private disposed = false;
   enabled = true;
 
@@ -77,11 +78,25 @@ export class InkFluid {
           uniform vec3 uColor;
           uniform vec2 uPoint;
           uniform float uRadius;
+          uniform vec4 uObstacle;
           void main() {
+            vec4 base = texture(uTarget, vUv);
+            if (uObstacle.w > 0.5) {
+              vec2 op = vUv - uObstacle.xy;
+              op.x *= uAspect;
+              if (length(op) < uObstacle.z) {
+                outColor = vec4(0.0);
+                return;
+              }
+            }
             vec2 p = vUv - uPoint;
             p.x *= uAspect;
             float fall = exp(-dot(p, p) / uRadius);
-            vec4 base = texture(uTarget, vUv);
+            if (uObstacle.w > 0.5) {
+              vec2 op = vUv - uObstacle.xy;
+              op.x *= uAspect;
+              fall *= smoothstep(uObstacle.z, uObstacle.z + 0.02, length(op));
+            }
             outColor = base + vec4(uColor * fall, fall);
           }`),
       ),
@@ -92,10 +107,57 @@ export class InkFluid {
           uniform vec2 uTexel;
           uniform float uDt;
           uniform float uDissipation;
+          uniform vec4 uObstacle;
+          uniform float uAspect;
           void main() {
+            if (uObstacle.w > 0.5) {
+              vec2 op = vUv - uObstacle.xy;
+              op.x *= uAspect;
+              if (length(op) < uObstacle.z) {
+                outColor = vec4(0.0);
+                return;
+              }
+            }
             vec2 vel = texture(uVelocity, vUv).xy;
             vec2 coord = vUv - uDt * vel * uTexel * 256.0;
+            if (uObstacle.w > 0.5) {
+              vec2 cop = coord - uObstacle.xy;
+              cop.x *= uAspect;
+              if (length(cop) < uObstacle.z) {
+                coord = vUv;
+              }
+            }
             outColor = texture(uSource, coord) * uDissipation;
+          }`),
+      ),
+      deflect: this.makeProgram(
+        frag(`
+          uniform sampler2D uVelocity;
+          uniform vec4 uObstacle;
+          uniform float uAspect;
+          void main() {
+            vec2 vel = texture(uVelocity, vUv).xy;
+            if (uObstacle.w > 0.5) {
+              vec2 op = vUv - uObstacle.xy;
+              op.x *= uAspect;
+              float dist = length(op);
+              if (dist < uObstacle.z) {
+                vec2 n = normalize(vec2(op.x / uAspect, op.y));
+                outColor = vec4(n * 0.2, 0.0, 1.0);
+                return;
+              }
+              float margin = uObstacle.z * 1.35;
+              if (dist < margin) {
+                vec2 n = normalize(vec2(op.x / uAspect, op.y));
+                float vn = dot(vel, n);
+                if (vn < 0.0) {
+                  vel -= n * vn * 1.3;
+                }
+                float repulse = smoothstep(margin, uObstacle.z, dist) * 0.7;
+                vel += n * repulse;
+              }
+            }
+            outColor = vec4(vel, 0.0, 1.0);
           }`),
       ),
       divergence: this.makeProgram(
@@ -112,8 +174,7 @@ export class InkFluid {
             if (vUv.x > 1.0 - uTexel.x) R = -C.x;
             if (vUv.y < uTexel.y) B = -C.y;
             if (vUv.y > 1.0 - uTexel.y) T = -C.y;
-            outColor = vec4(0.5 * ((R - L) + (T - B)), 0.0, 0.0, 1.0);
-          }`),
+            outColor = vec4(0.5 * ((R - L) + (T - B)), 0.0, 0.0, 1.0);\n          }`),
       ),
       clear: this.makeProgram(
         frag(`
@@ -156,10 +217,25 @@ export class InkFluid {
         frag(`
           uniform sampler2D uDye;
           uniform vec3 uInk;
+          uniform vec4 uObstacle;
+          uniform float uAspect;
           void main() {
+            if (uObstacle.w > 0.5) {
+              vec2 op = vUv - uObstacle.xy;
+              op.x *= uAspect;
+              if (length(op) < uObstacle.z) {
+                outColor = vec4(0.0);
+                return;
+              }
+            }
             float d = texture(uDye, vUv).x;
             float a = smoothstep(0.02, 0.55, d);
             a = pow(a, 0.85);
+            if (uObstacle.w > 0.5) {
+              vec2 op = vUv - uObstacle.xy;
+              op.x *= uAspect;
+              a *= smoothstep(uObstacle.z, uObstacle.z + 0.015, length(op));
+            }
             outColor = vec4(uInk * a, a);
           }`),
       ),
@@ -183,6 +259,19 @@ export class InkFluid {
     this.resize();
   }
 
+  setObstacle(screenX: number, screenY: number, screenRadius: number) {
+    const w = Math.max(1, this.canvas.clientWidth || window.innerWidth);
+    const h = Math.max(1, this.canvas.clientHeight || window.innerHeight);
+    const cx = screenX / w;
+    const cy = 1.0 - screenY / h;
+    const radiusAspect = screenRadius / h;
+    this.obstacle = [cx, cy, radiusAspect, 1.0];
+  }
+
+  clearObstacle() {
+    this.obstacle = [0, 0, 0, 0];
+  }
+
   resize() {
     const dpr = Math.min(1.5, window.devicePixelRatio || 1);
     const w = Math.max(1, Math.floor(this.canvas.clientWidth * dpr));
@@ -195,6 +284,14 @@ export class InkFluid {
 
   splat(nx: number, ny: number, dx: number, dy: number, amount = 1) {
     const aspect = this.canvas.width / Math.max(this.canvas.height, 1);
+    if (this.obstacle[3] > 0.5) {
+      const px = (nx - this.obstacle[0]) * aspect;
+      const py = (1 - ny) - this.obstacle[1];
+      if (Math.hypot(px, py) < this.obstacle[2] * 0.95) {
+        return;
+      }
+    }
+
     const p = this.programs.splat;
     const force = this.splatForce * amount;
 
@@ -204,6 +301,7 @@ export class InkFluid {
       uPoint: [nx, 1 - ny],
       uRadius: this.splatRadius,
       uColor: [dx * force, -dy * force, 0],
+      uObstacle: this.obstacle,
     });
     this.ping.vel ^= 1;
 
@@ -213,11 +311,20 @@ export class InkFluid {
       uPoint: [nx, 1 - ny],
       uRadius: this.splatRadius * 1.8,
       uColor: [0.9 * amount, 0.9 * amount, 0.9 * amount],
+      uObstacle: this.obstacle,
     });
     this.ping.dye ^= 1;
   }
 
   dump(nx: number, ny: number) {
+    const aspect = this.canvas.width / Math.max(this.canvas.height, 1);
+    if (this.obstacle[3] > 0.5) {
+      const px = (nx - this.obstacle[0]) * aspect;
+      const py = (1 - ny) - this.obstacle[1];
+      if (Math.hypot(px, py) < this.obstacle[2]) {
+        return;
+      }
+    }
     for (let i = 0; i < 8; i++) {
       const a = (i / 8) * Math.PI * 2;
       this.splat(
@@ -237,6 +344,7 @@ export class InkFluid {
     this.color[1] += (this.target[1] - this.color[1]) * k;
     this.color[2] += (this.target[2] - this.color[2]) * k;
     this.resize();
+    const aspect = this.canvas.width / Math.max(this.canvas.height, 1);
     const dt = 0.016;
     const simTexel = [1 / this.simW, 1 / this.simW] as const;
     const dyeTexel = [1 / this.dyeW, 1 / this.dyeW] as const;
@@ -251,9 +359,25 @@ export class InkFluid {
         uTexel: simTexel,
         uDt: dt,
         uDissipation: 0.99,
+        uObstacle: this.obstacle,
+        uAspect: aspect,
       },
     );
     this.ping.vel ^= 1;
+
+    if (this.obstacle[3] > 0.5) {
+      this.draw(
+        this.programs.deflect,
+        this.velocity[this.ping.vel],
+        this.velocity[this.ping.vel ^ 1],
+        {
+          uVelocity: this.velocity[this.ping.vel].tex,
+          uObstacle: this.obstacle,
+          uAspect: aspect,
+        },
+      );
+      this.ping.vel ^= 1;
+    }
 
     this.draw(
       this.programs.advect,
@@ -265,6 +389,8 @@ export class InkFluid {
         uTexel: dyeTexel,
         uDt: dt,
         uDissipation: 0.992,
+        uObstacle: this.obstacle,
+        uAspect: aspect,
       },
     );
     this.ping.dye ^= 1;
@@ -317,6 +443,7 @@ export class InkFluid {
   private display() {
     const gl = this.gl;
     const p = this.programs.display;
+    const aspect = this.canvas.width / Math.max(this.canvas.height, 1);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     gl.disable(gl.BLEND);
@@ -325,6 +452,18 @@ export class InkFluid {
     gl.bindTexture(gl.TEXTURE_2D, this.dye[this.ping.dye].tex);
     gl.uniform1i(p.uniforms.uDye, 0);
     gl.uniform3f(p.uniforms.uInk, this.color[0], this.color[1], this.color[2]);
+    if (p.uniforms.uObstacle) {
+      gl.uniform4f(
+        p.uniforms.uObstacle,
+        this.obstacle[0],
+        this.obstacle[1],
+        this.obstacle[2],
+        this.obstacle[3],
+      );
+    }
+    if (p.uniforms.uAspect) {
+      gl.uniform1f(p.uniforms.uAspect, aspect);
+    }
     gl.bindVertexArray(this.blit);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   }
@@ -333,7 +472,7 @@ export class InkFluid {
     program: Program,
     _read: Fbo | { tex: WebGLTexture },
     write: Fbo,
-    uniforms: Record<string, number | number[] | WebGLTexture>,
+    uniforms: Record<string, number | number[] | readonly number[] | WebGLTexture>,
   ) {
     const gl = this.gl;
     gl.bindFramebuffer(gl.FRAMEBUFFER, write.fbo);
@@ -348,6 +487,7 @@ export class InkFluid {
       } else if (Array.isArray(value)) {
         if (value.length === 2) gl.uniform2f(loc, value[0], value[1]);
         else if (value.length === 3) gl.uniform3f(loc, value[0], value[1], value[2]);
+        else if (value.length === 4) gl.uniform4f(loc, value[0], value[1], value[2], value[3]);
       } else {
         gl.activeTexture(gl.TEXTURE0 + unit);
         gl.bindTexture(gl.TEXTURE_2D, value);
@@ -412,23 +552,27 @@ export class InkFluid {
     return sh;
   }
 
-  private makeFbo(w: number, h: number, internal: number, type: number): Fbo {
+  private makeFbo(w: number, h: number, internalFormat: number, type: number): Fbo {
     const gl = this.gl;
     const tex = gl.createTexture();
-    const fbo = gl.createFramebuffer();
-    if (!tex || !fbo) throw new Error("fbo");
+    if (!tex) throw new Error("tex");
     gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texImage2D(gl.TEXTURE_2D, 0, internal, w, h, 0, gl.RGBA, type, null);
+    gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, w, h, 0, gl.RGBA, type, null);
+
+    const fbo = gl.createFramebuffer();
+    if (!fbo) throw new Error("fbo");
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
-    const ok = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
-    if (!ok) {
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-    }
+    gl.framebufferTexture2D(
+      gl.FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      gl.TEXTURE_2D,
+      tex,
+      0,
+    );
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     return { w, h, fbo, tex };
   }

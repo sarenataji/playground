@@ -5,11 +5,91 @@ let overTable = false;
 let pendingColor: [number, number, number] | null = null;
 const listeners = new Set<(f: InkFluid | null) => void>();
 
+export type Obstacle = {
+  x: number;
+  y: number;
+  radius: number;
+};
+
+let stampObstacle: Obstacle | null = null;
+
+export function setStampObstacle(next: Obstacle | null) {
+  stampObstacle = next;
+  if (fluid) {
+    if (next) {
+      fluid.setObstacle(next.x, next.y, next.radius);
+    } else {
+      fluid.clearObstacle();
+    }
+  }
+}
+
+export function getStampObstacle() {
+  return stampObstacle;
+}
+
+export type InkSplatter = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  strength: number;
+  time: number;
+};
+
+const inkHistory: InkSplatter[] = [];
+
+export function recordInkPoint(x: number, y: number, vx: number, vy: number, strength = 1) {
+  const now = performance.now();
+  inkHistory.push({ x, y, vx, vy, strength, time: now });
+  if (inkHistory.length > 80) {
+    inkHistory.shift();
+  }
+}
+
+export function getInkNear(
+  cx: number,
+  cy: number,
+  maxDist: number,
+): { x: number; y: number; strength: number } | null {
+  const now = performance.now();
+  let sumX = 0;
+  let sumY = 0;
+  let totalWeight = 0;
+
+  for (let i = inkHistory.length - 1; i >= 0; i--) {
+    const p = inkHistory[i];
+    const age = (now - p.time) / 1000;
+    if (age > 3.0) continue;
+    const decay = Math.max(0, 1 - age / 3.0);
+    const d = Math.hypot(p.x - cx, p.y - cy);
+    if (d < maxDist) {
+      // Weight points closer to the circle edge higher
+      const w = decay * p.strength * Math.max(0.1, 1 - d / maxDist);
+      sumX += p.x * w;
+      sumY += p.y * w;
+      totalWeight += w;
+    }
+  }
+
+  if (totalWeight > 0.04) {
+    return {
+      x: sumX / totalWeight,
+      y: sumY / totalWeight,
+      strength: totalWeight,
+    };
+  }
+  return null;
+}
+
 export function setInk(next: InkFluid | null) {
   fluid = next;
   if (fluid && pendingColor) {
     fluid.target = pendingColor;
     fluid.color = [...pendingColor];
+  }
+  if (fluid && stampObstacle) {
+    fluid.setObstacle(stampObstacle.x, stampObstacle.y, stampObstacle.radius);
   }
   listeners.forEach((fn) => fn(fluid));
 }

@@ -8,7 +8,7 @@
   --ember: #c45c26;
   --gutter: clamp(1.25rem, 6vw, 4.5rem);
   --nav-h: 4.6rem;
-  --display: "Bodoni Moda", "Times New Roman", serif;
+  --display: "Playfair Display", "Bodoni Moda", "Times New Roman", serif;
   --wordmark: "Playfair Display", "Bodoni Moda", "Times New Roman", serif;
   --ui: "Outfit", system-ui, sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -299,7 +299,7 @@ button {
   font-family: var(--display);
   font-weight: 500;
   font-size: clamp(2.8rem, 8.4vw, 7.4rem);
-  line-height: 0.92;
+  line-height: 0.96;
   letter-spacing: -0.03em;
 }
 
@@ -307,6 +307,8 @@ button {
   display: block;
   overflow: hidden;
   white-space: nowrap;
+  padding: 0.08em 0;
+  margin: -0.08em 0;
 }
 
 .hero-line .char {
@@ -1064,13 +1066,15 @@ kbd {
 .scroll-home .hero-title {
   display: block;
   font-size: clamp(2.8rem, 8.4vw, 7.8rem);
-  line-height: 0.92;
+  line-height: 0.96;
 }
 
 .scroll-home .hero-line {
   display: block;
   overflow: hidden;
   white-space: nowrap;
+  padding: 0.08em 0;
+  margin: -0.08em 0;
 }
 
 .scroll-home .hero-row {
