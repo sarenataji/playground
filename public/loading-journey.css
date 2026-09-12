@@ -1,0 +1,77 @@
+html.journey-loading { overflow: hidden; }
+.loading-journey {
+  --journey-ease: cubic-bezier(.76, 0, .24, 1);
+  position: fixed; inset: 0; z-index: 1000; isolation: isolate;
+  display: grid; grid-template-rows: auto 1fr auto;
+  padding: clamp(24px, 5vw, 64px);
+  color: #fff0d8; cursor: auto;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.loading-journey[hidden] { display: none; }
+/* A circular aperture grows from the center to reveal the live experience. */
+@property --journey-opening {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+.loading-journey::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(ellipse at 50% 50%, #b65b3b 0%, #71304c 22%, #37142f 49%, #190b21 82%);
+  mask-image: radial-gradient(circle at center, transparent var(--journey-opening), #000 calc(var(--journey-opening) + 1px));
+  transition: --journey-opening 1600ms var(--journey-ease) 150ms;
+}
+.loading-journey__brand { font-size: 24px; letter-spacing: -.06em; }
+.loading-journey__center {
+  position: absolute; top: 50%; left: 50%; width: min(85vw, 520px); isolation: isolate;
+  transform: translate(-50%, -50%); text-align: center;
+}
+.loading-journey__center::before, .loading-journey__center::after {
+  content: ''; position: absolute; left: 50%; top: 45%; z-index: -1;
+  width: clamp(220px, 32vw, 340px); aspect-ratio: 1; border-radius: 50%;
+  border: 1px solid #ffc58f45; box-shadow: 0 0 65px #ffb16f0d, inset 0 0 65px #ffb16f0d; transform: translate(-50%, -50%);
+}
+.loading-journey__center::after {
+  width: clamp(260px, 38vw, 405px); border-color: #ffbdb226;
+  animation: journey-breathe 3s ease-in-out infinite alternate;
+}
+.loading-journey__label, .loading-journey__footer {
+  font: 9px/1.6 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .3em;
+  color: #f0bdb1;
+}
+.loading-journey__number {
+  display: block; margin: 28px 0 20px;
+  font-size: clamp(100px, 16vw, 180px); line-height: 1;
+  font-weight: 400; letter-spacing: -.07em; font-variant-numeric: lining-nums tabular-nums;
+  text-shadow: 0 0 60px #ffc38340;
+}
+.loading-journey__copy { margin: 24px 0 0; font-size: clamp(15px, 2vw, 18px); font-style: italic; color: #ffdbc1; }
+.loading-journey__track { width: 72px; height: 1px; margin: 0 auto; background: #ffc28b40; overflow: hidden; }
+.loading-journey__track::after { content: ''; display: block; width: 40%; height: 100%; background: #ffd49a; animation: journey-drift 1.8s ease-in-out infinite alternate; }
+.loading-journey__footer { grid-row: 3; display: flex; justify-content: space-between; gap: 24px; }
+.loading-journey__retry { position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); color: inherit; font: 14px system-ui, sans-serif; }
+.loading-journey__brand, .loading-journey__center, .loading-journey__footer, .loading-journey__retry {
+  transition: opacity 250ms ease;
+}
+.loading-journey__seam {
+  position: absolute; left: 50%; top: 50%; width: 28px; aspect-ratio: 1;
+  border-radius: 50%; background: #ffe9be;
+  box-shadow: 0 0 50px 20px #ffac6655, 0 0 120px 50px #f8765b33;
+  transform: translate(-50%, -50%) scale(.2); opacity: 0; pointer-events: none;
+  transition: transform 450ms ease, opacity 350ms ease;
+}
+.loading-journey[data-phase='arrived'] .loading-journey__seam { transform: translate(-50%, -50%) scale(1); opacity: .85; }
+.loading-journey[data-phase='arrived'] .loading-journey__center { opacity: 0; }
+.loading-journey[data-phase='leaving']::before { --journey-opening: 75vmax; }
+.loading-journey[data-phase='leaving'] .loading-journey__brand,
+.loading-journey[data-phase='leaving'] .loading-journey__center,
+.loading-journey[data-phase='leaving'] .loading-journey__footer,
+.loading-journey[data-phase='leaving'] .loading-journey__retry { opacity: 0; }
+.loading-journey[data-phase='leaving'] .loading-journey__seam { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+@keyframes journey-drift { to { transform: translateX(150%); } }
+@keyframes journey-breathe { to { transform: translate(-50%, -50%) scale(1.06); opacity: .4; } }
+@media (prefers-reduced-motion: reduce) {
+  .loading-journey *, .loading-journey::before, .loading-journey::after,
+  .loading-journey__center::after { transition: none !important; animation: none !important; }
+  .loading-journey__track::after { animation: none; }
+}

@@ -1,143 +1,145 @@
 import { useEffect, useRef, useState } from "react";
-import { pointer } from "@/lib/pointer";
+import {
+  Alignment, Fit, Layout, StateMachineInputType, useRive,
+  type StateMachineInput,
+} from "@rive-app/react-canvas";
 import { prefersReducedMotion } from "@/lib/motion";
 import { useInView } from "@/lib/useInView";
 import { tintInk } from "@/lib/inkBus";
 
-type Orb = {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  r: number;
-  q: number;
-  hue: number;
-};
+const MACHINE = "MagnetsMachine";
+const layout = new Layout({ fit: Fit.Contain, alignment: Alignment.Center });
+type Inputs = Record<"targetX" | "targetY" | "speed" | "mode", StateMachineInput>;
+const clamp = (value: number) => Math.max(0, Math.min(100, value));
 
 export function Magnets() {
   const root = useRef<HTMLElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const surface = useRef<HTMLDivElement>(null);
   const live = useInView(root);
   const [mode, setMode] = useState<"pull" | "push">("pull");
-  const modeRef = useRef(mode);
-  modeRef.current = mode;
+  const [reduced, setReduced] = useState(prefersReducedMotion);
+  const [failed, setFailed] = useState(false);
+  const [inputs, setInputs] = useState<Inputs | null>(null);
+  const { rive, RiveComponent } = useRive({
+    src: "/rive/magnets.riv",
+    stateMachines: MACHINE,
+    autoplay: false,
+    layout,
+    onLoadError: () => setFailed(true),
+  });
+
+  useEffect(() => {
+    if (inputs || failed) window.dispatchEvent(new CustomEvent("journey:ready", { detail: "/weather" }));
+  }, [inputs, failed]);
 
   useEffect(() => {
     if (live) tintInk([0.55, 0.35, 0.12], true);
   }, [live]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
 
-    let orbs: Orb[] = [];
-    const resize = () => {
-      const dpr = Math.min(1.5, window.devicePixelRatio || 1);
-      canvas.width = Math.floor(canvas.clientWidth * dpr);
-      canvas.height = Math.floor(canvas.clientHeight * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    resize();
-    window.addEventListener("resize", resize);
-
-    const seed = () => {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      orbs = Array.from({ length: 22 }, (_, i) => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: 0,
-        vy: 0,
-        r: 10 + (i % 5) * 5,
-        q: i % 2 === 0 ? 1 : -1,
-        hue: i % 3 === 0 ? 28 : i % 3 === 1 ? 40 : 18,
-      }));
-    };
-    seed();
-
-    let raf = 0;
-    const tick = () => {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--paper").trim() || "#121826";
-      ctx.fillRect(0, 0, w, h);
-
-      if (live && !prefersReducedMotion()) {
-        const mx = pointer.nx * w;
-        const my = pointer.ny * h;
-        const sign = modeRef.current === "pull" ? -1 : 1;
-        for (const o of orbs) {
-          const dx = o.x - mx;
-          const dy = o.y - my;
-          const d2 = dx * dx + dy * dy + 80;
-          const f = (1800 * sign * o.q) / d2;
-          o.vx += (dx / Math.sqrt(d2)) * f * 0.04;
-          o.vy += (dy / Math.sqrt(d2)) * f * 0.04;
-
-          for (const b of orbs) {
-            if (b === o) continue;
-            const rx = o.x - b.x;
-            const ry = o.y - b.y;
-            const rr = rx * rx + ry * ry + 40;
-            const coul = (o.q * b.q * 90) / rr;
-            o.vx += (rx / Math.sqrt(rr)) * coul * 0.02;
-            o.vy += (ry / Math.sqrt(rr)) * coul * 0.02;
-          }
-
-          o.vx *= 0.96;
-          o.vy *= 0.96;
-          o.x += o.vx;
-          o.y += o.vy;
-          if (o.x < o.r) {
-            o.x = o.r;
-            o.vx *= -0.7;
-          }
-          if (o.x > w - o.r) {
-            o.x = w - o.r;
-            o.vx *= -0.7;
-          }
-          if (o.y < o.r) {
-            o.y = o.r;
-            o.vy *= -0.7;
-          }
-          if (o.y > h - o.r) {
-            o.y = h - o.r;
-            o.vy *= -0.7;
-          }
-        }
-
-        ctx.beginPath();
-        ctx.arc(mx, my, 18, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(232, 196, 120, 0.7)";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+  useEffect(() => {
+    if (!rive) return;
+    rive.play(MACHINE);
+    const available = rive.stateMachineInputs(MACHINE) ?? [];
+    const bindings = {} as Inputs;
+    for (const name of ["targetX", "targetY", "speed", "mode"] as const) {
+      const input = available.find((item) => item.name === name && item.type === StateMachineInputType.Number);
+      if (!input) {
+        rive.pause();
+        setFailed(true);
+        return;
       }
+      bindings[name] = input;
+    }
+    bindings.targetX.value = bindings.targetY.value = 50;
+    bindings.speed.value = 0;
+    setInputs(bindings);
+    return () => setInputs(null);
+  }, [rive]);
 
-      for (const o of orbs) {
-        const g = ctx.createRadialGradient(o.x - o.r * 0.3, o.y - o.r * 0.3, 2, o.x, o.y, o.r);
-        g.addColorStop(0, `hsla(${o.hue}, 70%, 72%, 0.95)`);
-        g.addColorStop(1, `hsla(${o.hue}, 50%, 28%, 0.2)`);
-        ctx.beginPath();
-        ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-      }
+  useEffect(() => {
+    if (inputs) inputs.mode.value = mode === "pull" ? 0 : 1;
+  }, [inputs, mode]);
 
-      raf = requestAnimationFrame(tick);
+  useEffect(() => {
+    const element = surface.current;
+    if (!rive || !inputs || !element) return;
+    let previous: { x: number; y: number; time: number; id: number } | null = null;
+    let idleTimer: number | undefined;
+    const reset = () => {
+      window.clearTimeout(idleTimer);
+      previous = null;
+      inputs.targetX.value = inputs.targetY.value = 50;
+      inputs.speed.value = 0;
     };
-    raf = requestAnimationFrame(tick);
-
+    const syncPlayback = () => {
+      reset();
+      if (live && !reduced && !document.hidden) rive.play(MACHINE);
+      else rive.pause();
+    };
+    syncPlayback();
+    const move = (event: PointerEvent) => {
+      if (!live || reduced || document.hidden || !event.isPrimary) return;
+      const rect = element.getBoundingClientRect();
+      // Match Fit.Contain, including the letterbox around the 1000 × 600 artboard.
+      const scale = Math.min(rect.width / 1000, rect.height / 600);
+      if (scale <= 0) return;
+      const x = clamp((event.clientX - rect.left - (rect.width - 1000 * scale) / 2) / (1000 * scale) * 100);
+      const y = clamp((event.clientY - rect.top - (rect.height - 600 * scale) / 2) / (600 * scale) * 100);
+      const elapsed = previous ? event.timeStamp - previous.time : 0;
+      // Speed is normalized artboard units/second, capped at 100. No physics integration.
+      inputs.speed.value = previous && previous.id === event.pointerId && elapsed > 0 && elapsed < 200
+        ? clamp(Math.hypot(x - previous.x, y - previous.y) * 1000 / elapsed)
+        : 0;
+      inputs.targetX.value = x;
+      inputs.targetY.value = y;
+      previous = { x, y, time: event.timeStamp, id: event.pointerId };
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => {
+        inputs.speed.value = 0;
+        previous = null;
+      }, 100);
+    };
+    const up = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") reset();
+    };
+    element.addEventListener("pointermove", move);
+    element.addEventListener("pointerdown", move);
+    element.addEventListener("pointerleave", reset);
+    element.addEventListener("pointercancel", reset);
+    element.addEventListener("pointerup", up);
+    document.addEventListener("visibilitychange", syncPlayback);
+    window.addEventListener("blur", reset);
+    window.addEventListener("resize", reset);
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      // useRive may dispose its inputs before this effect's unmount cleanup.
+      // Clear pending work without writing into the destroyed WASM objects.
+      window.clearTimeout(idleTimer);
+      previous = null;
+      element.removeEventListener("pointermove", move);
+      element.removeEventListener("pointerdown", move);
+      element.removeEventListener("pointerleave", reset);
+      element.removeEventListener("pointercancel", reset);
+      element.removeEventListener("pointerup", up);
+      document.removeEventListener("visibilitychange", syncPlayback);
+      window.removeEventListener("blur", reset);
+      window.removeEventListener("resize", reset);
+      rive.pause();
     };
-  }, [live]);
+  }, [rive, inputs, live, reduced]);
 
   return (
     <section ref={root} className="room magnets" id="magnets">
-      <canvas ref={canvasRef} className="room-canvas well" />
+      <div ref={surface} className="room-canvas well">
+        <RiveComponent style={{ position: "absolute", inset: 0 }} aria-hidden="true" />
+        {failed && <p role="status">The elastic shapes couldn’t load. Please refresh to try again.</p>}
+      </div>
       <div className="room-copy invert">
         <p className="kicker invert">Come close, or make space</p>
         <h2 className="display">Your hand is the weather.</h2>
@@ -145,6 +147,7 @@ export function Magnets() {
         <button
           type="button"
           className="text-btn invert"
+          disabled={failed || !inputs || reduced}
           onClick={() => setMode((m) => (m === "pull" ? "push" : "pull"))}
         >
           Mode: {mode}

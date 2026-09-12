@@ -13,10 +13,27 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <link rel="stylesheet" href="/loading-journey.css" />
   </head>
   <body>
     <div id="root"></div>
+    <div id="loading-journey" class="loading-journey" role="status" aria-label="Preparing your experience">
+      <span class="loading-journey__brand">Sarena</span>
+      <div class="loading-journey__center" aria-hidden="true">
+        <span class="loading-journey__label">Step into a softer world</span>
+        <span class="loading-journey__number" data-count>03</span>
+        <div class="loading-journey__track"></div>
+        <p class="loading-journey__copy" data-copy>Let the outside fall away.</p>
+      </div>
+      <span class="loading-journey__seam" aria-hidden="true"></span>
+      <div class="loading-journey__footer"><span>A little wonder.</span><span>Just ahead.</span></div>
+      <a class="loading-journey__retry" data-retry href="" hidden>Reload the experience</a>
+    </div>
+    <noscript><style>.loading-journey { display: none; }</style><p>Please enable JavaScript to enter the experience.</p></noscript>
+    <script src="/loading-journey.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

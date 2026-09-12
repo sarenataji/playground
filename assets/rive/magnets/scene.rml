@@ -1,0 +1,469 @@
+<Rive version="1" kind="fragment">
+  <Artboard id="0:1" name="Magnets" width="1000" height="600" defaultStateMachineId="0:1000">
+    <Node id="0:2" name="Field direction">
+      <Node id="0:3" name="Cursor target" />
+    </Node>
+    <Node name="Jelly 1" x="120" y="110" scaleX="0.7" scaleY="0.7">
+      <Node id="0:20" name="Elastic volume">
+        <Node id="0:21" name="IK target" x="170" y="35">
+          <TranslationConstraint targetId="0:3" offset="true" sourceSpaceValue="world" destSpaceValue="local" copyFactor="0.22" copyFactorY="0.3" />
+        </Node>
+        <RootBone id="0:22" name="Upper" length="110">
+          <Bone id="0:23" name="Lower" length="110">
+            <IKConstraint targetId="0:21" parentBoneCount="1" strength="1" invertDirection="false" />
+          </Bone>
+        </RootBone>
+        <Shape name="Skinned jelly membrane">
+          <PointsPath isClosed="true">
+            <CubicDetachedVertex x="0" y="0" inRotation="1.57" outRotation="-1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="1" values="255" inIndices="1" inValues="255" outIndices="1" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="-48" inRotation="3.14" outRotation="0" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="220" y="0" inRotation="-1.57" outRotation="1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="2" values="255" inIndices="2" inValues="255" outIndices="2" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="48" inRotation="0" outRotation="3.14" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <Skin>
+              <Tendon boneId="0:22" tx="0" ty="0" />
+              <Tendon boneId="0:23" tx="110" ty="0" />
+            </Skin>
+          </PointsPath>
+          <Fill>
+            <SolidColor colorValue="FFE8C478" />
+          </Fill>
+          <Stroke thickness="1.5">
+            <SolidColor colorValue="99FFF0D0" />
+          </Stroke>
+        </Shape>
+      </Node>
+    </Node>
+    <Node name="Jelly 2" x="410" y="100" scaleX="0.85" scaleY="0.85">
+      <Node id="0:30" name="Elastic volume">
+        <Node id="0:31" name="IK target" x="170" y="35">
+          <TranslationConstraint targetId="0:3" offset="true" sourceSpaceValue="world" destSpaceValue="local" copyFactor="0.255" copyFactorY="0.32" />
+        </Node>
+        <RootBone id="0:32" name="Upper" length="110">
+          <Bone id="0:33" name="Lower" length="110">
+            <IKConstraint targetId="0:31" parentBoneCount="1" strength="1" invertDirection="true" />
+          </Bone>
+        </RootBone>
+        <Shape name="Skinned jelly membrane">
+          <PointsPath isClosed="true">
+            <CubicDetachedVertex x="0" y="0" inRotation="1.57" outRotation="-1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="1" values="255" inIndices="1" inValues="255" outIndices="1" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="-48" inRotation="3.14" outRotation="0" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="220" y="0" inRotation="-1.57" outRotation="1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="2" values="255" inIndices="2" inValues="255" outIndices="2" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="48" inRotation="0" outRotation="3.14" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <Skin>
+              <Tendon boneId="0:32" tx="0" ty="0" />
+              <Tendon boneId="0:33" tx="110" ty="0" />
+            </Skin>
+          </PointsPath>
+          <Fill>
+            <SolidColor colorValue="FFD99667" />
+          </Fill>
+          <Stroke thickness="1.5">
+            <SolidColor colorValue="99FFF0D0" />
+          </Stroke>
+        </Shape>
+      </Node>
+    </Node>
+    <Node name="Jelly 3" x="700" y="125" scaleX="0.65" scaleY="0.65">
+      <Node id="0:40" name="Elastic volume">
+        <Node id="0:41" name="IK target" x="170" y="35">
+          <TranslationConstraint targetId="0:3" offset="true" sourceSpaceValue="world" destSpaceValue="local" copyFactor="0.29000000000000004" copyFactorY="0.33999999999999997" />
+        </Node>
+        <RootBone id="0:42" name="Upper" length="110">
+          <Bone id="0:43" name="Lower" length="110">
+            <IKConstraint targetId="0:41" parentBoneCount="1" strength="1" invertDirection="false" />
+          </Bone>
+        </RootBone>
+        <Shape name="Skinned jelly membrane">
+          <PointsPath isClosed="true">
+            <CubicDetachedVertex x="0" y="0" inRotation="1.57" outRotation="-1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="1" values="255" inIndices="1" inValues="255" outIndices="1" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="-48" inRotation="3.14" outRotation="0" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="220" y="0" inRotation="-1.57" outRotation="1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="2" values="255" inIndices="2" inValues="255" outIndices="2" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="48" inRotation="0" outRotation="3.14" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <Skin>
+              <Tendon boneId="0:42" tx="0" ty="0" />
+              <Tendon boneId="0:43" tx="110" ty="0" />
+            </Skin>
+          </PointsPath>
+          <Fill>
+            <SolidColor colorValue="FFB88556" />
+          </Fill>
+          <Stroke thickness="1.5">
+            <SolidColor colorValue="99FFF0D0" />
+          </Stroke>
+        </Shape>
+      </Node>
+    </Node>
+    <Node name="Jelly 4" x="90" y="340" scaleX="0.8" scaleY="0.8">
+      <Node id="0:50" name="Elastic volume">
+        <Node id="0:51" name="IK target" x="170" y="35">
+          <TranslationConstraint targetId="0:3" offset="true" sourceSpaceValue="world" destSpaceValue="local" copyFactor="0.325" copyFactorY="0.36" />
+        </Node>
+        <RootBone id="0:52" name="Upper" length="110">
+          <Bone id="0:53" name="Lower" length="110">
+            <IKConstraint targetId="0:51" parentBoneCount="1" strength="1" invertDirection="true" />
+          </Bone>
+        </RootBone>
+        <Shape name="Skinned jelly membrane">
+          <PointsPath isClosed="true">
+            <CubicDetachedVertex x="0" y="0" inRotation="1.57" outRotation="-1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="1" values="255" inIndices="1" inValues="255" outIndices="1" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="-48" inRotation="3.14" outRotation="0" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="220" y="0" inRotation="-1.57" outRotation="1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="2" values="255" inIndices="2" inValues="255" outIndices="2" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="48" inRotation="0" outRotation="3.14" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <Skin>
+              <Tendon boneId="0:52" tx="0" ty="0" />
+              <Tendon boneId="0:53" tx="110" ty="0" />
+            </Skin>
+          </PointsPath>
+          <Fill>
+            <SolidColor colorValue="FFE8C478" />
+          </Fill>
+          <Stroke thickness="1.5">
+            <SolidColor colorValue="99FFF0D0" />
+          </Stroke>
+        </Shape>
+      </Node>
+    </Node>
+    <Node name="Jelly 5" x="390" y="350" scaleX="0.95" scaleY="0.95">
+      <Node id="0:60" name="Elastic volume">
+        <Node id="0:61" name="IK target" x="170" y="35">
+          <TranslationConstraint targetId="0:3" offset="true" sourceSpaceValue="world" destSpaceValue="local" copyFactor="0.36" copyFactorY="0.38" />
+        </Node>
+        <RootBone id="0:62" name="Upper" length="110">
+          <Bone id="0:63" name="Lower" length="110">
+            <IKConstraint targetId="0:61" parentBoneCount="1" strength="1" invertDirection="false" />
+          </Bone>
+        </RootBone>
+        <Shape name="Skinned jelly membrane">
+          <PointsPath isClosed="true">
+            <CubicDetachedVertex x="0" y="0" inRotation="1.57" outRotation="-1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="1" values="255" inIndices="1" inValues="255" outIndices="1" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="-48" inRotation="3.14" outRotation="0" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="220" y="0" inRotation="-1.57" outRotation="1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="2" values="255" inIndices="2" inValues="255" outIndices="2" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="48" inRotation="0" outRotation="3.14" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <Skin>
+              <Tendon boneId="0:62" tx="0" ty="0" />
+              <Tendon boneId="0:63" tx="110" ty="0" />
+            </Skin>
+          </PointsPath>
+          <Fill>
+            <SolidColor colorValue="FFD99667" />
+          </Fill>
+          <Stroke thickness="1.5">
+            <SolidColor colorValue="99FFF0D0" />
+          </Stroke>
+        </Shape>
+      </Node>
+    </Node>
+    <Node name="Jelly 6" x="730" y="370" scaleX="0.65" scaleY="0.65">
+      <Node id="0:70" name="Elastic volume">
+        <Node id="0:71" name="IK target" x="170" y="35">
+          <TranslationConstraint targetId="0:3" offset="true" sourceSpaceValue="world" destSpaceValue="local" copyFactor="0.395" copyFactorY="0.4" />
+        </Node>
+        <RootBone id="0:72" name="Upper" length="110">
+          <Bone id="0:73" name="Lower" length="110">
+            <IKConstraint targetId="0:71" parentBoneCount="1" strength="1" invertDirection="true" />
+          </Bone>
+        </RootBone>
+        <Shape name="Skinned jelly membrane">
+          <PointsPath isClosed="true">
+            <CubicDetachedVertex x="0" y="0" inRotation="1.57" outRotation="-1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="1" values="255" inIndices="1" inValues="255" outIndices="1" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="-48" inRotation="3.14" outRotation="0" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="220" y="0" inRotation="-1.57" outRotation="1.57" inDistance="34" outDistance="34">
+              <CubicWeight indices="2" values="255" inIndices="2" inValues="255" outIndices="2" outValues="255" />
+            </CubicDetachedVertex>
+            <CubicDetachedVertex x="110" y="48" inRotation="0" outRotation="3.14" inDistance="34" outDistance="34">
+              <CubicWeight indices="513" values="32895" inIndices="513" inValues="32895" outIndices="513" outValues="32895" />
+            </CubicDetachedVertex>
+            <Skin>
+              <Tendon boneId="0:72" tx="0" ty="0" />
+              <Tendon boneId="0:73" tx="110" ty="0" />
+            </Skin>
+          </PointsPath>
+          <Fill>
+            <SolidColor colorValue="FFB88556" />
+          </Fill>
+          <Stroke thickness="1.5">
+            <SolidColor colorValue="99FFF0D0" />
+          </Stroke>
+        </Shape>
+      </Node>
+    </Node>
+    <LinearAnimation id="0:100" name="Left" duration="60">
+      <KeyedObject objectId="0:3">
+        <KeyedProperty propertyKey="13">
+          <KeyFrameDouble frame="0" value="-350" />
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:101" name="Right" duration="60">
+      <KeyedObject objectId="0:3">
+        <KeyedProperty propertyKey="13">
+          <KeyFrameDouble frame="0" value="350" />
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:102" name="Top" duration="60">
+      <KeyedObject objectId="0:3">
+        <KeyedProperty propertyKey="14">
+          <KeyFrameDouble frame="0" value="-220" />
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:103" name="Bottom" duration="60">
+      <KeyedObject objectId="0:3">
+        <KeyedProperty propertyKey="14">
+          <KeyFrameDouble frame="0" value="220" />
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:104" name="Pull" duration="60">
+      <KeyedObject objectId="0:2">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:2">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:105" name="Push" duration="60">
+      <KeyedObject objectId="0:2">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="-1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:2">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="-1" />
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:106" name="Rest" duration="60">
+      <KeyedObject objectId="0:20">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:20">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:30">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:30">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:40">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:40">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:50">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:50">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:60">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:60">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:70">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:70">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="1" />
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:107" name="Stretch" duration="60">
+      <KeyedObject objectId="0:20">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1.18" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:20">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="0.84" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:30">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1.18" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:30">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="0.84" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:40">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1.18" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:40">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="0.84" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:50">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1.18" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:50">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="0.84" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:60">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1.18" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:60">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="0.84" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:70">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1.18" />
+        </KeyedProperty>
+      </KeyedObject>
+      <KeyedObject objectId="0:70">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="0.84" />
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <StateMachine id="0:1000" name="MagnetsMachine">
+      <StateMachineNumber id="0:1001" name="targetX" value="50" />
+      <StateMachineNumber id="0:1002" name="targetY" value="50" />
+      <StateMachineNumber id="0:1003" name="speed" value="0" />
+      <StateMachineNumber id="0:1004" name="mode" value="0" />
+      <StateMachineLayer name="Horizontal">
+        <AnyState x="0" y="-100" />
+        <ExitState x="300" y="-100" />
+        <EntryState>
+          <StateTransition stateToId="0:1100" />
+        </EntryState>
+        <BlendState1DInput id="0:1100" inputId="0:1001" x="200">
+          <BlendAnimation1D animationId="0:100" value="0" />
+          <BlendAnimation1D animationId="0:101" value="100" />
+        </BlendState1DInput>
+      </StateMachineLayer>
+      <StateMachineLayer name="Vertical">
+        <AnyState x="0" y="-100" />
+        <ExitState x="300" y="-100" />
+        <EntryState>
+          <StateTransition stateToId="0:1101" />
+        </EntryState>
+        <BlendState1DInput id="0:1101" inputId="0:1002" x="200">
+          <BlendAnimation1D animationId="0:102" value="0" />
+          <BlendAnimation1D animationId="0:103" value="100" />
+        </BlendState1DInput>
+      </StateMachineLayer>
+      <StateMachineLayer name="Polarity">
+        <AnyState x="0" y="-100" />
+        <ExitState x="300" y="-100" />
+        <EntryState>
+          <StateTransition stateToId="0:1102" />
+        </EntryState>
+        <BlendState1DInput id="0:1102" inputId="0:1004" x="200">
+          <BlendAnimation1D animationId="0:104" value="0" />
+          <BlendAnimation1D animationId="0:105" value="1" />
+        </BlendState1DInput>
+      </StateMachineLayer>
+      <StateMachineLayer name="Elastic response">
+        <AnyState x="0" y="-100" />
+        <ExitState x="300" y="-100" />
+        <EntryState>
+          <StateTransition stateToId="0:1200" />
+        </EntryState>
+        <AnimationState id="0:1200" animationId="0:106" x="200">
+          <StateTransition stateToId="0:1201" duration="120" interpolationType="elastic">
+            <ElasticInterpolator easingValue="1" amplitude="1" period=".4" />
+            <TransitionNumberCondition inputId="0:1003" opValue="greaterThan" value="8" />
+          </StateTransition>
+        </AnimationState>
+        <AnimationState id="0:1201" animationId="0:107" x="400">
+          <StateTransition stateToId="0:1200" duration="900" interpolationType="elastic">
+            <ElasticInterpolator easingValue="1" amplitude="1" period=".4" />
+            <TransitionNumberCondition inputId="0:1003" opValue="lessThanOrEqual" value="8" />
+          </StateTransition>
+        </AnimationState>
+      </StateMachineLayer>
+    </StateMachine>
+  </Artboard>
+</Rive>

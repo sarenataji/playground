@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -15,13 +15,7 @@ import { Springs } from "./components/Springs";
 import { Tunnel } from "./components/Tunnel";
 import { InkTable } from "./components/InkTable";
 import { Arena } from "./components/Arena";
-import { Breath } from "./components/Breath";
-import { Dawn } from "./components/Dawn";
-import { Pond } from "./components/Pond";
-import { Bloom } from "./components/Bloom";
-import { Hum } from "./components/Hum";
 import { Home } from "./pages/Home";
-import { Witness } from "./pages/Witness";
 import { OriginalHome } from "./pages/OriginalHome";
 import { RoomPage } from "./pages/RoomPage";
 import { bindPointer } from "./lib/pointer";
@@ -31,6 +25,38 @@ import { roomByPath } from "./lib/rooms";
 import { applyTheme } from "./lib/theme";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Keep rooms that are absent from the scrolling homepage out of its initial load.
+const roomModules = {
+  "/breathe": () => import("./components/Breath").then((m) => ({ default: m.Breath })),
+  "/dawn": () => import("./components/Dawn").then((m) => ({ default: m.Dawn })),
+  "/pond": () => import("./components/Pond").then((m) => ({ default: m.Pond })),
+  "/bloom": () => import("./components/Bloom").then((m) => ({ default: m.Bloom })),
+  "/hum": () => import("./components/Hum").then((m) => ({ default: m.Hum })),
+  "/witness": () => import("./pages/Witness").then((m) => ({ default: m.Witness })),
+};
+const Breath = lazy(roomModules["/breathe"]);
+const Dawn = lazy(roomModules["/dawn"]);
+const Pond = lazy(roomModules["/pond"]);
+const Bloom = lazy(roomModules["/bloom"]);
+const Hum = lazy(roomModules["/hum"]);
+const Witness = lazy(roomModules["/witness"]);
+
+function RouteReady({ children, path }: { children: ReactNode; path: string }) {
+  useEffect(() => {
+    // Lazy content must be measured after it mounts, not while its import is pending.
+    const frame = requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+      // These rooms signal when their asynchronous canvas is ready.
+      if (path !== "/witness" && path !== "/weather") {
+        window.dispatchEvent(new CustomEvent("journey:ready", { detail: path }));
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [path]);
+  return children;
+}
+
 
 function RouteBody({ path }: { path: string }) {
   switch (path) {
@@ -147,6 +173,25 @@ export default function App() {
   useEffect(() => bindPointer(), []);
 
   useEffect(() => {
+    // Warm a room on navigation intent without downloading every room in advance.
+    const preload = (event: Event) => {
+      const link = (event.target as Element | null)?.closest?.("a[href]");
+      const href = link?.getAttribute("href");
+      if (!href) return;
+      const url = new URL(href, window.location.href);
+      if (url.origin !== window.location.origin) return;
+      const load = roomModules[url.pathname as keyof typeof roomModules];
+      if (load) void load().catch(() => { /* Navigation can retry a failed preload. */ });
+    };
+    document.addEventListener("pointerover", preload);
+    document.addEventListener("focusin", preload);
+    return () => {
+      document.removeEventListener("pointerover", preload);
+      document.removeEventListener("focusin", preload);
+    };
+  }, []);
+
+  useEffect(() => {
     applyTheme(room);
   }, [room]);
 
@@ -211,7 +256,9 @@ export default function App() {
       >
         {path !== "/" && path !== "/playground" && <Atmosphere />}
         <Nav />
-        <RouteBody path={path} />
+        <Suspense fallback={<main className="page" style={{ minHeight: "100svh" }} aria-busy="true"><p role="status" className="lede">Opening the room…</p></main>}>
+          <RouteReady key={path} path={path}><RouteBody path={path} /></RouteReady>
+        </Suspense>
       </div>
       <InkLayer active={open} />
     </>

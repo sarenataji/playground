@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 
 let current = typeof window === "undefined" ? "/" : window.location.pathname;
 const listeners = new Set<() => void>();
 
 function sync() {
+  window.dispatchEvent(new Event("journey:start"));
   current = window.location.pathname.replace(/\/+$/, "") || "/";
   listeners.forEach((fn) => fn());
 }
@@ -19,7 +20,10 @@ export function usePath() {
   const [path, setPath] = useState(current);
 
   useEffect(() => {
-    const onChange = () => setPath(window.location.pathname.replace(/\/+$/, "") || "/");
+    const onChange = () => {
+      // Keep the current room visible until the destination's code is ready.
+      startTransition(() => setPath(window.location.pathname.replace(/\/+$/, "") || "/"));
+    };
     listeners.add(onChange);
     window.addEventListener("popstate", sync);
     onChange();

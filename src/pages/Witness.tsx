@@ -33,6 +33,10 @@ export function Witness() {
   const collapse = Math.max(noticed ? 1 : 0, clamp((position - .825) / .07));
 
   useEffect(() => {
+    if (ready || failed) window.dispatchEvent(new CustomEvent("journey:ready", { detail: "/witness" }));
+  }, [ready, failed]);
+
+  useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const preference = () => setReduceMotion(media.matches);
     preference();
