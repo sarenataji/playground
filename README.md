@@ -20,3 +20,7 @@ Opens at `http://127.0.0.1:5177`.
 Vite, React 19, TypeScript, Three.js / R3F, GSAP, Lenis, custom WebGL2 fluid, custom metaball field.
 
 Research and the build roadmap live in `docs/`.
+
+## Witness room
+
+The `/witness` experience explores absorption, attention, and the felt observer through ten visual scroll chapters. Before continuing work on it, read the [Witness concept and continuation guide](docs/WITNESS.md). It contains the intended discovery, chapter structure, implementation map, and validation steps.

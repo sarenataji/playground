@@ -1,6 +1,6 @@
 import { useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
-import { phaseAt, type Attention } from "./witnessExperience";
+import { cameraProgressAt, phaseAt, type Attention } from "./witnessExperience";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 type Props = {
@@ -313,16 +313,17 @@ export default function WitnessScene({ progress, orbit, reduced, attention, anch
       const dt = Math.min((now - previous) / 1000, .5); previous = now;
       if (!inView || document.hidden || renderer.getContext().isContextLost()) return;
       if (!motionPaused.current) elapsed += dt;
-      shown = reduced.current ? progress.current : THREE.MathUtils.damp(shown, progress.current, 4.2, dt);
-      const passage = phaseAt(shown);
+      const cameraProgress = cameraProgressAt(progress.current);
+      shown = reduced.current ? cameraProgress : THREE.MathUtils.damp(shown, cameraProgress, 4.2, dt);
+      const passage = phaseAt(progress.current);
       let reveal = smooth(.16, .37, shown);
       let turn = smooth(.45, .55, shown);
       if (reduced.current) { reveal = shown < .16 ? 0 : 1; turn = shown < .45 ? 0 : 1; }
       const allowOrbit = smooth(.38, .405, shown) * (1 - smooth(.55, .6, shown));
       const returnToRoom = reduced.current ? (passage === "attention" ? 1 : 0) : smooth(.56, .61, shown) * (1 - smooth(.735, .8, shown));
-      const leave = reduced.current ? (passage === "rest" ? 1 : passage === "observer" ? .6 : 0) : smooth(.75, .88, shown);
+      const leave = reduced.current ? (shown >= .88 ? 1 : shown >= .75 ? .6 : 0) : smooth(.75, .88, shown);
       fieldMotes.visible = shown > .76;
-      const openingFocus = attention.current === "message" ? 1 : 0;
+      const openingFocus = attention.current === "message" || passage === "story" || passage === "sensation" ? 1 : 0;
       focusMessage = THREE.MathUtils.damp(focusMessage, openingFocus, 1.8, dt);
       focusWindow = THREE.MathUtils.damp(focusWindow, attention.current === "window" ? 1 : 0, 2.3, dt);
       focusCup = THREE.MathUtils.damp(focusCup, attention.current === "cup" ? 1 : 0, 2.3, dt);
@@ -385,7 +386,9 @@ export default function WitnessScene({ progress, orbit, reduced, attention, anch
         fieldMotes.position.y = Math.sin(elapsed * .2) * .06;
       }
       renderer.setRenderTarget(target); renderer.render(reality, realityCamera);
-      renderer.setRenderTarget(null); renderer.render(scene, camera);
+      renderer.setRenderTarget(null);
+      if (passage === "rest") renderer.render(reality, realityCamera);
+      else renderer.render(scene, camera);
       if (!rendered) { rendered = true; callbacks.current.onReady(); }
     };
     frame = requestAnimationFrame(tick);
