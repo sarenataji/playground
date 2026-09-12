@@ -1246,3 +1246,80 @@ kbd {
     transition: none !important;
   }
 }
+
+.bloom-garden {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: crosshair;
+  touch-action: pan-y;
+  border-radius: inherit;
+}
+.bloom-garden:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -6px;
+}
+.bloom-plant-hint {
+  position: absolute;
+  left: 24%;
+  top: 56%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--ink);
+  font-size: 0.8rem;
+  pointer-events: none;
+  opacity: 0.65;
+}
+.bloom-plant-hint > span {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 50%;
+}
+.bloom-garden-footer {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  pointer-events: none;
+  color: var(--dust);
+  font-size: 0.78rem;
+}
+.bloom-garden-footer button {
+  pointer-events: auto;
+  border: 1px solid color-mix(in srgb, var(--dust) 25%, transparent);
+  border-radius: 999px;
+  padding: 0.65rem 0.9rem;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.bloom-garden-footer button:hover { border-color: var(--accent); }
+.bloom-garden-footer button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.bloom-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .bloom-plant-hint { left: 12%; top: 28%; }
+  .bloom-garden-footer { left: 1rem; right: 1rem; font-size: 0.7rem; }
+}
+.bloom-stage {
+  background: radial-gradient(ellipse at 50% 55%, color-mix(in srgb, var(--bloom) 48%, transparent), transparent 72%), var(--paper);
+}

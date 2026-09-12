@@ -1,0 +1,509 @@
+<Rive version="1" kind="fragment">
+  <Artboard id="0:1" name="Bloom" width="600" height="600" defaultStateMachineId="0:100" isComponent="true">
+    <Node id="0:2" name="Follow hand" x="300" y="615">
+      <Node id="0:3" name="Lift">
+        <Node id="0:4" name="Breeze">
+          <Node id="0:5" name="Flower" y="-315">
+            <Node id="0:6" name="Petal flutter">
+              <Node id="0:7" name="Unfurl" scaleX="0.7" scaleY="0.7">
+                <Shape name="Pollen" x="20.0" y="0.0">
+                  <Ellipse width="5" height="5" />
+                  <Fill>
+                    <SolidColor colorValue="FFD9A28A" />
+                  </Fill>
+                </Shape>
+                <Shape name="Pollen" x="15.32088886237956" y="12.855752193730785">
+                  <Ellipse width="5" height="5" />
+                  <Fill>
+                    <SolidColor colorValue="FFD9A28A" />
+                  </Fill>
+                </Shape>
+                <Shape name="Pollen" x="3.4729635533386083" y="19.69615506024416">
+                  <Ellipse width="5" height="5" />
+                  <Fill>
+                    <SolidColor colorValue="FFD9A28A" />
+                  </Fill>
+                </Shape>
+                <Shape name="Pollen" x="-9.999999999999996" y="17.320508075688775">
+                  <Ellipse width="5" height="5" />
+                  <Fill>
+                    <SolidColor colorValue="FFD9A28A" />
+                  </Fill>
+                </Shape>
+                <Shape name="Pollen" x="-18.793852415718167" y="6.840402866513378">
+                  <Ellipse width="5" height="5" />
+                  <Fill>
+                    <SolidColor colorValue="FFD9A28A" />
+                  </Fill>
+                </Shape>
+                <Shape name="Pollen" x="-18.79385241571817" y="-6.840402866513373">
+                  <Ellipse width="5" height="5" />
+                  <Fill>
+                    <SolidColor colorValue="FFD9A28A" />
+                  </Fill>
+                </Shape>
+                <Shape name="Pollen" x="-10.000000000000009" y="-17.320508075688767">
+                  <Ellipse width="5" height="5" />
+                  <Fill>
+                    <SolidColor colorValue="FFD9A28A" />
+                  </Fill>
+                </Shape>
+                <Shape name="Pollen" x="3.4729635533385994" y="-19.696155060244163">
+                  <Ellipse width="5" height="5" />
+                  <Fill>
+                    <SolidColor colorValue="FFD9A28A" />
+                  </Fill>
+                </Shape>
+                <Shape name="Pollen" x="15.320888862379556" y="-12.855752193730792">
+                  <Ellipse width="5" height="5" />
+                  <Fill>
+                    <SolidColor colorValue="FFD9A28A" />
+                  </Fill>
+                </Shape>
+                <Shape name="Warm center" x="0" y="0">
+                  <Ellipse width="42" height="42" />
+                  <Fill>
+                    <SolidColor colorValue="FF604236" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 1.1" rotation="0.0">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="21" outRotation="-1.04" outDistance="21" />
+                    <CubicDetachedVertex x="0" y="-54" inRotation="0.5" inDistance="21" outRotation="2.64" outDistance="21" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="E6F4D1B8" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 1.2" rotation="1.0471975511965976">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="21" outRotation="-1.04" outDistance="21" />
+                    <CubicDetachedVertex x="0" y="-54" inRotation="0.5" inDistance="21" outRotation="2.64" outDistance="21" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="E6F4D1B8" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 1.3" rotation="2.0943951023931953">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="21" outRotation="-1.04" outDistance="21" />
+                    <CubicDetachedVertex x="0" y="-54" inRotation="0.5" inDistance="21" outRotation="2.64" outDistance="21" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="E6F4D1B8" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 1.4" rotation="3.141592653589793">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="21" outRotation="-1.04" outDistance="21" />
+                    <CubicDetachedVertex x="0" y="-54" inRotation="0.5" inDistance="21" outRotation="2.64" outDistance="21" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="E6F4D1B8" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 1.5" rotation="4.1887902047863905">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="21" outRotation="-1.04" outDistance="21" />
+                    <CubicDetachedVertex x="0" y="-54" inRotation="0.5" inDistance="21" outRotation="2.64" outDistance="21" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="E6F4D1B8" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 1.6" rotation="5.235987755982989">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="21" outRotation="-1.04" outDistance="21" />
+                    <CubicDetachedVertex x="0" y="-54" inRotation="0.5" inDistance="21" outRotation="2.64" outDistance="21" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="E6F4D1B8" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 2.1" rotation="0.22">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="35" outRotation="-1.04" outDistance="35" />
+                    <CubicDetachedVertex x="0" y="-91" inRotation="0.5" inDistance="35" outRotation="2.64" outDistance="35" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="C4CD8D7D" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 2.2" rotation="1.0053981633974483">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="35" outRotation="-1.04" outDistance="35" />
+                    <CubicDetachedVertex x="0" y="-91" inRotation="0.5" inDistance="35" outRotation="2.64" outDistance="35" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="C4CD8D7D" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 2.3" rotation="1.7907963267948965">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="35" outRotation="-1.04" outDistance="35" />
+                    <CubicDetachedVertex x="0" y="-91" inRotation="0.5" inDistance="35" outRotation="2.64" outDistance="35" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="C4CD8D7D" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 2.4" rotation="2.576194490192345">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="35" outRotation="-1.04" outDistance="35" />
+                    <CubicDetachedVertex x="0" y="-91" inRotation="0.5" inDistance="35" outRotation="2.64" outDistance="35" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="C4CD8D7D" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 2.5" rotation="3.3615926535897933">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="35" outRotation="-1.04" outDistance="35" />
+                    <CubicDetachedVertex x="0" y="-91" inRotation="0.5" inDistance="35" outRotation="2.64" outDistance="35" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="C4CD8D7D" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 2.6" rotation="4.146990816987241">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="35" outRotation="-1.04" outDistance="35" />
+                    <CubicDetachedVertex x="0" y="-91" inRotation="0.5" inDistance="35" outRotation="2.64" outDistance="35" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="C4CD8D7D" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 2.7" rotation="4.932388980384689">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="35" outRotation="-1.04" outDistance="35" />
+                    <CubicDetachedVertex x="0" y="-91" inRotation="0.5" inDistance="35" outRotation="2.64" outDistance="35" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="C4CD8D7D" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 2.8" rotation="5.717787143782138">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="35" outRotation="-1.04" outDistance="35" />
+                    <CubicDetachedVertex x="0" y="-91" inRotation="0.5" inDistance="35" outRotation="2.64" outDistance="35" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="C4CD8D7D" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.1" rotation="0.44">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.2" rotation="0.9635987755982989">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.3" rotation="1.4871975511965976">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.4" rotation="2.0107963267948965">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.5" rotation="2.534395102393195">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.6" rotation="3.0579938779914944">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.7" rotation="3.581592653589793">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.8" rotation="4.105191429188092">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.9" rotation="4.628790204786391">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.10" rotation="5.15238898038469">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.11" rotation="5.675987755982989">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+                <Shape name="Petal 3.12" rotation="6.1995865315812875">
+                  <PointsPath isClosed="true">
+                    <CubicDetachedVertex x="0" y="0" inRotation="-2.1" inDistance="40" outRotation="-1.04" outDistance="40" />
+                    <CubicDetachedVertex x="0" y="-126" inRotation="0.5" inDistance="40" outRotation="2.64" outDistance="40" />
+                  </PointsPath>
+                  <Fill>
+                    <SolidColor colorValue="99ECC8B5" />
+                  </Fill>
+                </Shape>
+              </Node>
+            </Node>
+          </Node>
+          <Shape name="Sage leaf" y="-110" rotation="-0.85">
+            <PointsPath isClosed="true">
+              <CubicDetachedVertex x="0" y="0" inRotation="-2.5" inDistance="32" outRotation="-0.64" outDistance="32" />
+              <CubicDetachedVertex x="0" y="-77" inRotation="0.64" inDistance="26" outRotation="2.5" outDistance="26" />
+            </PointsPath>
+            <Fill>
+              <SolidColor colorValue="A39AA084" />
+            </Fill>
+          </Shape>
+          <Shape name="Sage leaf" y="-174" rotation="0.85">
+            <PointsPath isClosed="true">
+              <CubicDetachedVertex x="0" y="0" inRotation="-2.5" inDistance="32" outRotation="-0.64" outDistance="32" />
+              <CubicDetachedVertex x="0" y="-77" inRotation="0.64" inDistance="26" outRotation="2.5" outDistance="26" />
+            </PointsPath>
+            <Fill>
+              <SolidColor colorValue="A39AA084" />
+            </Fill>
+          </Shape>
+          <Shape name="Stem">
+            <PointsPath>
+              <CubicDetachedVertex x="0" y="0" outRotation="-1.5" outDistance="110" />
+              <CubicDetachedVertex x="0" y="-315" inRotation="1.6" inDistance="105" />
+            </PointsPath>
+            <Stroke thickness="3.4" cap="round">
+              <SolidColor colorValue="FF9B8475" />
+            </Stroke>
+          </Shape>
+        </Node>
+      </Node>
+    </Node>
+    <LinearAnimation id="0:20" name="Bud" duration="60" loopValue="oneShot">
+      <KeyedObject objectId="0:7">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="0.28" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="0.34" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:21" name="Open bloom" duration="60" loopValue="oneShot">
+      <KeyedObject objectId="0:7">
+        <KeyedProperty propertyKey="16">
+          <KeyFrameDouble frame="0" value="1" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="1" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:22" name="Lean left" duration="60" loopValue="oneShot">
+      <KeyedObject objectId="0:2">
+        <KeyedProperty propertyKey="15">
+          <KeyFrameDouble frame="0" value="-0.13" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:23" name="Lean right" duration="60" loopValue="oneShot">
+      <KeyedObject objectId="0:2">
+        <KeyedProperty propertyKey="15">
+          <KeyFrameDouble frame="0" value="0.13" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:24" name="Lift up" duration="60" loopValue="oneShot">
+      <KeyedObject objectId="0:3">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="1.08" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:25" name="Settle down" duration="60" loopValue="oneShot">
+      <KeyedObject objectId="0:3">
+        <KeyedProperty propertyKey="17">
+          <KeyFrameDouble frame="0" value="0.92" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:26" name="Quiet breeze" duration="300" loopValue="loop">
+      <KeyedObject objectId="0:4">
+        <KeyedProperty propertyKey="15">
+          <KeyFrameDouble frame="0" value="-0.018" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+          <KeyFrameDouble frame="150" value="0.018" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+          <KeyFrameDouble frame="300" value="-0.018" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:27" name="Resting petals" duration="60" loopValue="oneShot">
+      <KeyedObject objectId="0:6">
+        <KeyedProperty propertyKey="15">
+          <KeyFrameDouble frame="0" value="0" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <LinearAnimation id="0:28" name="Touch flutter" duration="60" loopValue="oneShot">
+      <KeyedObject objectId="0:6">
+        <KeyedProperty propertyKey="15">
+          <KeyFrameDouble frame="0" value="0" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+          <KeyFrameDouble frame="9" value="0.09" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+          <KeyFrameDouble frame="21" value="-0.06" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+          <KeyFrameDouble frame="36" value="0.035" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+          <KeyFrameDouble frame="60" value="0" interpolationType="cubic">
+            <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1" />
+          </KeyFrameDouble>
+        </KeyedProperty>
+      </KeyedObject>
+    </LinearAnimation>
+    <StateMachine name="BloomMachine" id="0:100">
+      <StateMachineNumber id="0:101" name="cursorX" value="50" />
+      <StateMachineNumber id="0:102" name="cursorY" value="50" />
+      <StateMachineNumber id="0:103" name="bloomProgress" value="65" />
+      <StateMachineTrigger id="0:104" name="tapBloom" />
+      <StateMachineLayer name="Unfurl" id="0:110">
+        <AnyState x="200" y="-140" />
+        <ExitState x="420" y="-140" />
+        <EntryState x="0" y="0">
+          <StateTransition stateToId="0:120" />
+        </EntryState>
+        <BlendState1DInput id="0:120" inputId="0:103" x="200" y="0">
+          <BlendAnimation1D animationId="0:20" value="0" />
+          <BlendAnimation1D animationId="0:21" value="100" />
+        </BlendState1DInput>
+      </StateMachineLayer>
+      <StateMachineLayer name="Follow X" id="0:111">
+        <AnyState x="200" y="-140" />
+        <ExitState x="420" y="-140" />
+        <EntryState x="0" y="0">
+          <StateTransition stateToId="0:121" />
+        </EntryState>
+        <BlendState1DInput id="0:121" inputId="0:101" x="200" y="0">
+          <BlendAnimation1D animationId="0:22" value="0" />
+          <BlendAnimation1D animationId="0:23" value="100" />
+        </BlendState1DInput>
+      </StateMachineLayer>
+      <StateMachineLayer name="Follow Y" id="0:112">
+        <AnyState x="200" y="-140" />
+        <ExitState x="420" y="-140" />
+        <EntryState x="0" y="0">
+          <StateTransition stateToId="0:122" />
+        </EntryState>
+        <BlendState1DInput id="0:122" inputId="0:102" x="200" y="0">
+          <BlendAnimation1D animationId="0:24" value="0" />
+          <BlendAnimation1D animationId="0:25" value="100" />
+        </BlendState1DInput>
+      </StateMachineLayer>
+      <StateMachineLayer name="Breeze" id="0:113">
+        <AnyState x="200" y="-140" />
+        <ExitState x="420" y="-140" />
+        <EntryState x="0" y="0">
+          <StateTransition stateToId="0:123" />
+        </EntryState>
+        <AnimationState id="0:123" animationId="0:26" x="200" y="0" />
+      </StateMachineLayer>
+      <StateMachineLayer name="Touch" id="0:114">
+        <AnyState x="200" y="-140" />
+        <ExitState x="420" y="-140" />
+        <EntryState x="0" y="0">
+          <StateTransition stateToId="0:124" />
+        </EntryState>
+        <AnimationState id="0:124" animationId="0:27" x="200" y="0">
+          <StateTransition stateToId="0:125" duration="80">
+            <TransitionTriggerCondition inputId="0:104" />
+          </StateTransition>
+        </AnimationState>
+        <AnimationState id="0:125" animationId="0:28" x="420" y="0" reset="true">
+          <StateTransition stateToId="0:124" duration="80" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" />
+        </AnimationState>
+      </StateMachineLayer>
+    </StateMachine>
+  </Artboard>
+  <ComponentAsset artboardId="0:1" name="Bloom" />
+</Rive>
