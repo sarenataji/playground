@@ -21,6 +21,7 @@ import { Pond } from "./components/Pond";
 import { Bloom } from "./components/Bloom";
 import { Hum } from "./components/Hum";
 import { Home } from "./pages/Home";
+import { Witness } from "./pages/Witness";
 import { OriginalHome } from "./pages/OriginalHome";
 import { RoomPage } from "./pages/RoomPage";
 import { bindPointer } from "./lib/pointer";
@@ -33,6 +34,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 function RouteBody({ path }: { path: string }) {
   switch (path) {
+    case "/witness":
+      return <Witness />;
     case "/":
     case "/playground":
       return <OriginalHome />;

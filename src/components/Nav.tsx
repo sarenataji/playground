@@ -4,6 +4,7 @@ import { roomByPath } from "@/lib/rooms";
 import { MapOverlay } from "./MapOverlay";
 
 const ROOM_LINKS = [
+  { href: "/witness", label: "Witness" },
   { href: "/rooms", label: "Rooms" },
   { href: "/breathe", label: "Breathe" },
   { href: "/dawn", label: "Dawn" },
@@ -32,6 +33,7 @@ export function Nav() {
           <a href="#shatter">Motion</a>
           <a href="#play">Touch</a>
           <a href="/rooms">Rooms</a>
+          <a href="/witness">Witness</a>
         </nav>
       </header>
     );

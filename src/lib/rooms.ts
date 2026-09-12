@@ -268,4 +268,11 @@ export function nextRoom(path: string) {
   return rooms[(i + 1) % rooms.length];
 }
 
+rooms.push({
+  path: "/witness", id: "witness", name: "Witness", verb: "Notice",
+  note: "The same scene. A little more space.",
+  paper: "#100f10", ink: "#f3e9d8", dust: "#ad9d8a", accent: "#d9b481",
+  bloom: "#30251e", sky: "#191d22", invert: true, inkRgb: [0.7, 0.55, 0.35],
+});
+
 export const destinations = rooms.filter((r) => r.id !== "home" && r.id !== "rooms");
