@@ -2,6 +2,11 @@
 
 type Ball = { x: number; y: number; r: number; ox: number; oy: number; phase: number };
 
+function smoothstep(min: number, max: number, value: number): number {
+  const x = Math.max(0, Math.min(1, (value - min) / (max - min)));
+  return x * x * (3 - 2 * x);
+}
+
 export class BlobField {
   canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -62,9 +67,14 @@ export class BlobField {
     const thresh = 1.05;
 
     for (let y = 0; y < h; y += 2) {
+      const v = y / h;
+      const fadeY = smoothstep(0, 0.15, v) * smoothstep(0, 0.15, 1 - v);
+
       for (let x = 0; x < w; x += 2) {
         const u = x / w;
-        const v = y / h;
+        const fadeX = smoothstep(0, 0.12, u) * smoothstep(0, 0.12, 1 - u);
+        const edgeFade = fadeX * fadeY;
+
         let sum = 0;
         for (const b of this.balls) {
           const dx = (u - b.x) * aspect;
@@ -72,13 +82,16 @@ export class BlobField {
           sum += (b.r * b.r) / (dx * dx + dy * dy + 0.0004);
         }
         if (sum > thresh) {
-          const a = Math.min(255, (sum - thresh) * 90);
-          const i0 = (y * w + x) * 4;
-          this.paint(data, i0, a);
-          if (x + 1 < w) this.paint(data, i0 + 4, a);
-          if (y + 1 < h) {
-            this.paint(data, i0 + w * 4, a);
-            if (x + 1 < w) this.paint(data, i0 + w * 4 + 4, a);
+          const rawA = Math.min(255, (sum - thresh) * 90);
+          const a = rawA * edgeFade;
+          if (a > 0.5) {
+            const i0 = (y * w + x) * 4;
+            this.paint(data, i0, a);
+            if (x + 1 < w) this.paint(data, i0 + 4, a);
+            if (y + 1 < h) {
+              this.paint(data, i0 + w * 4, a);
+              if (x + 1 < w) this.paint(data, i0 + w * 4 + 4, a);
+            }
           }
         }
       }

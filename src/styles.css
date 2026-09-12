@@ -97,9 +97,10 @@ button {
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(48px);
+  filter: blur(64px);
   opacity: 0.42;
   animation: drift 22s ease-in-out infinite;
+  will-change: transform;
 }
 
 .orb-a {
@@ -182,10 +183,10 @@ button {
   gap: 1rem;
   min-height: var(--nav-h);
   padding: 0.9rem var(--gutter);
-  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  background: color-mix(in srgb, var(--paper) 75%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 6%, transparent);
 }
 
 .nav-mark {
@@ -272,6 +273,8 @@ button {
   pointer-events: none;
   mix-blend-mode: multiply;
   opacity: 0.45;
+  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, black 50%, transparent 100%);
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, black 50%, transparent 100%);
 }
 
 .hero-wordmark {
