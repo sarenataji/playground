@@ -20,37 +20,16 @@
   </head>
   <body>
     <div id="root"></div>
-    <div id="loading-journey" class="loading-journey" role="status" aria-label="Preparing your experience">
-      <div class="loading-journey__panel loading-journey__panel--left" aria-hidden="true">
-        <svg class="loading-journey__art" viewBox="0 0 720 1000" preserveAspectRatio="xMidYMid slice">
-          <g fill="none" stroke="#5364aa" stroke-width="2" transform="rotate(-28 140 560)">
-            <ellipse cx="140" cy="560" rx="200" ry="350" /><ellipse cx="140" cy="560" rx="165" ry="310" /><ellipse cx="140" cy="560" rx="130" ry="270" />
-          </g>
-          <circle cx="420" cy="190" r="48" fill="#d86a4a" />
-          <path d="M 50 870 Q 175 740 300 870 T 550 870" fill="none" stroke="#c1be79" stroke-width="42" />
-          <path d="M 560 310 L 590 350 M 595 305 L 555 355" stroke="#5364aa" stroke-width="3" />
-        </svg>
+    <div id="loading-journey" class="loading-journey" hidden>
+      <div class="loading-journey__center">
+        <div class="loading-journey__motion" aria-hidden="true">
+          <span class="loading-journey__shadow"></span>
+          <span class="loading-journey__traveler"><span class="loading-journey__dot"></span></span>
+        </div>
+        <p class="loading-journey__copy" role="status" data-copy>A little moment.</p>
+        <a class="loading-journey__retry" data-retry href="" hidden>Try loading again</a>
       </div>
-      <div class="loading-journey__panel loading-journey__panel--right" aria-hidden="true">
-        <svg class="loading-journey__art" viewBox="0 0 720 1000" preserveAspectRatio="xMidYMid slice">
-          <path d="M 630 -100 C 260 160 850 180 510 440 S 360 700 800 800" fill="none" stroke="#879acf" stroke-width="110" />
-          <path d="M 650 -100 C 280 160 870 180 530 440 S 380 700 820 800" fill="none" stroke="#405599" stroke-width="2" />
-          <g fill="#efc45c" transform="translate(215 785)">
-            <ellipse rx="25" ry="86" /><ellipse rx="25" ry="86" transform="rotate(60)" /><ellipse rx="25" ry="86" transform="rotate(120)" />
-            <circle r="23" fill="#d86a4a" />
-          </g>
-          <circle cx="95" cy="240" r="12" fill="#405599" />
-        </svg>
-      </div>
-      <span class="loading-journey__brand">Sarena<span>A little room to wonder</span></span>
-      <div class="loading-journey__center" aria-hidden="true">
-        <span class="loading-journey__label">A change of scenery</span>
-        <span class="loading-journey__number" data-count>03</span>
-        <div class="loading-journey__track"></div>
-        <p class="loading-journey__copy" data-copy>Make room for a little wonder.</p>
-      </div>
-      <div class="loading-journey__footer"><span>Take a breath.</span><span>See what opens. ↗</span></div>
-      <a class="loading-journey__retry" data-retry href="" hidden>Reload the experience</a>
+      <span class="loading-journey__brand">Sarena</span>
     </div>
     <noscript><style>.loading-journey { display: none; }</style><p>Please enable JavaScript to enter the experience.</p></noscript>
     <script src="/loading-journey.js"></script>
