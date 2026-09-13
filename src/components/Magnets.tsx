@@ -1,157 +1,134 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  Alignment, Fit, Layout, StateMachineInputType, useRive,
-  type StateMachineInput,
-} from "@rive-app/react-canvas";
-import { prefersReducedMotion } from "@/lib/motion";
+import { useEffect, useRef } from "react";
 import { useInView } from "@/lib/useInView";
 import { tintInk } from "@/lib/inkBus";
 
-const MACHINE = "MagnetsMachine";
-const layout = new Layout({ fit: Fit.Contain, alignment: Alignment.Center });
-type Inputs = Record<"targetX" | "targetY" | "speed" | "mode", StateMachineInput>;
-const clamp = (value: number) => Math.max(0, Math.min(100, value));
-
 export function Magnets() {
   const root = useRef<HTMLElement>(null);
-  const surface = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wind = useRef({ x: 0.5, strength: 0, direction: 1 });
+  const lastX = useRef<number | null>(null);
   const live = useInView(root);
-  const [mode, setMode] = useState<"pull" | "push">("pull");
-  const [reduced, setReduced] = useState(prefersReducedMotion);
-  const [failed, setFailed] = useState(false);
-  const [inputs, setInputs] = useState<Inputs | null>(null);
-  const { rive, RiveComponent } = useRive({
-    src: "/rive/magnets.riv",
-    stateMachines: MACHINE,
-    autoplay: false,
-    layout,
-    onLoadError: () => setFailed(true),
-  });
 
   useEffect(() => {
-    if (inputs || failed) window.dispatchEvent(new CustomEvent("journey:ready", { detail: "/weather" }));
-  }, [inputs, failed]);
-
+    window.dispatchEvent(new CustomEvent("journey:ready", { detail: "/weather" }));
+  }, []);
   useEffect(() => {
-    if (live) tintInk([0.55, 0.35, 0.12], true);
+    if (live) tintInk([0.44, 0.49, 0.32], true);
   }, [live]);
 
   useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduced(query.matches);
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  useEffect(() => {
-    if (!rive) return;
-    rive.play(MACHINE);
-    const available = rive.stateMachineInputs(MACHINE) ?? [];
-    const bindings = {} as Inputs;
-    for (const name of ["targetX", "targetY", "speed", "mode"] as const) {
-      const input = available.find((item) => item.name === name && item.type === StateMachineInputType.Number);
-      if (!input) {
-        rive.pause();
-        setFailed(true);
-        return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx || !live) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    let previous = 0;
+    let time = 0;
+    let width = 0;
+    let height = 0;
+    const stems = Array.from({ length: 190 }, (_, i) => ({
+      x: ((i * 0.61803398875) % 1),
+      depth: (Math.sin(i * 127.1 + 31.7) * 43758.5453) % 1 * 0.5 + 0.5,
+      length: 0.48 + ((Math.sin(i * 73.3 + 9.1) * 19341.17) % 1 * 0.5 + 0.5) * 0.48,
+      bend: 0,
+      velocity: 0,
+    })).sort((a, b) => a.depth - b.depth);
+    const resize = () => {
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+    resize();
+    const draw = (now: number) => {
+      const dt = previous ? Math.min((now - previous) / 1000, 0.04) : 0;
+      previous = now;
+      if (!motion.matches) time += dt;
+      ctx.clearRect(0, 0, width, height);
+      if (!motion.matches) wind.current.strength *= Math.exp(-dt * 0.65);
+      const glow = ctx.createRadialGradient(width * 0.62, height * 0.58, 0, width * 0.62, height * 0.58, width * 0.65);
+      glow.addColorStop(0, "rgba(122, 139, 89, 0.09)");
+      glow.addColorStop(1, "rgba(122, 139, 89, 0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, width, height);
+      for (const stem of stems) {
+        const proximity = Math.exp(-Math.pow((stem.x - wind.current.x) / 0.28, 2));
+        const ambient = motion.matches ? 0 : Math.sin(time * 0.65 - stem.x * 7 + stem.depth * 2) * 0.075;
+        const target = ambient + wind.current.direction * wind.current.strength * (0.22 + proximity * 0.78) * 0.64;
+        if (motion.matches) stem.bend = target;
+        else {
+          stem.velocity += ((target - stem.bend) * 15 - stem.velocity * 5) * dt;
+          stem.bend += stem.velocity * dt;
+        }
+        const x = stem.x * (width + 50) - 25;
+        const y = height * (0.74 + stem.depth * 0.26);
+        const length = height * stem.length * (0.25 + stem.depth * 0.35);
+        const lean = stem.bend * length;
+        const tipX = x + lean;
+        const tipY = y - length + Math.abs(stem.bend) * length * 0.18;
+        const alpha = 0.23 + stem.depth * 0.53;
+        ctx.strokeStyle = `rgba(${stem.depth > 0.7 ? '187, 177, 125' : '128, 150, 118'}, ${alpha})`;
+        ctx.lineWidth = 0.65 + stem.depth * 0.9;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.bezierCurveTo(x, y - length * 0.35, x + lean * 0.45, tipY + length * 0.12, tipX, tipY);
+        ctx.stroke();
+        // Small seed heads give the field a botanical silhouette.
+        ctx.save();
+        ctx.translate(tipX, tipY);
+        ctx.rotate(Math.atan2(lean * 0.7, length * 0.3));
+        ctx.fillStyle = `rgba(205, 187, 137, ${alpha * 0.8})`;
+        ctx.beginPath();
+        ctx.ellipse(0, -length * 0.035, 1.1 + stem.depth, length * 0.043, -0.15, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
       }
-      bindings[name] = input;
-    }
-    bindings.targetX.value = bindings.targetY.value = 50;
-    bindings.speed.value = 0;
-    setInputs(bindings);
-    return () => setInputs(null);
-  }, [rive]);
+      const fade = ctx.createLinearGradient(0, height * 0.83, 0, height);
+      fade.addColorStop(0, "rgba(17, 27, 24, 0)");
+      fade.addColorStop(1, "#111b18");
+      ctx.fillStyle = fade;
+      ctx.fillRect(0, height * 0.83, width, height * 0.17);
+      frame = requestAnimationFrame(draw);
+    };
+    frame = requestAnimationFrame(draw);
+    return () => { cancelAnimationFrame(frame); observer.disconnect(); };
+  }, [live]);
 
-  useEffect(() => {
-    if (inputs) inputs.mode.value = mode === "pull" ? 0 : 1;
-  }, [inputs, mode]);
-
-  useEffect(() => {
-    const element = surface.current;
-    if (!rive || !inputs || !element) return;
-    let previous: { x: number; y: number; time: number; id: number } | null = null;
-    let idleTimer: number | undefined;
-    const reset = () => {
-      window.clearTimeout(idleTimer);
-      previous = null;
-      inputs.targetX.value = inputs.targetY.value = 50;
-      inputs.speed.value = 0;
-    };
-    const syncPlayback = () => {
-      reset();
-      if (live && !reduced && !document.hidden) rive.play(MACHINE);
-      else rive.pause();
-    };
-    syncPlayback();
-    const move = (event: PointerEvent) => {
-      if (!live || reduced || document.hidden || !event.isPrimary) return;
-      const rect = element.getBoundingClientRect();
-      // Match Fit.Contain, including the letterbox around the 1000 × 600 artboard.
-      const scale = Math.min(rect.width / 1000, rect.height / 600);
-      if (scale <= 0) return;
-      const x = clamp((event.clientX - rect.left - (rect.width - 1000 * scale) / 2) / (1000 * scale) * 100);
-      const y = clamp((event.clientY - rect.top - (rect.height - 600 * scale) / 2) / (600 * scale) * 100);
-      const elapsed = previous ? event.timeStamp - previous.time : 0;
-      // Speed is normalized artboard units/second, capped at 100. No physics integration.
-      inputs.speed.value = previous && previous.id === event.pointerId && elapsed > 0 && elapsed < 200
-        ? clamp(Math.hypot(x - previous.x, y - previous.y) * 1000 / elapsed)
-        : 0;
-      inputs.targetX.value = x;
-      inputs.targetY.value = y;
-      previous = { x, y, time: event.timeStamp, id: event.pointerId };
-      window.clearTimeout(idleTimer);
-      idleTimer = window.setTimeout(() => {
-        inputs.speed.value = 0;
-        previous = null;
-      }, 100);
-    };
-    const up = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse") reset();
-    };
-    element.addEventListener("pointermove", move);
-    element.addEventListener("pointerdown", move);
-    element.addEventListener("pointerleave", reset);
-    element.addEventListener("pointercancel", reset);
-    element.addEventListener("pointerup", up);
-    document.addEventListener("visibilitychange", syncPlayback);
-    window.addEventListener("blur", reset);
-    window.addEventListener("resize", reset);
-    return () => {
-      // useRive may dispose its inputs before this effect's unmount cleanup.
-      // Clear pending work without writing into the destroyed WASM objects.
-      window.clearTimeout(idleTimer);
-      previous = null;
-      element.removeEventListener("pointermove", move);
-      element.removeEventListener("pointerdown", move);
-      element.removeEventListener("pointerleave", reset);
-      element.removeEventListener("pointercancel", reset);
-      element.removeEventListener("pointerup", up);
-      document.removeEventListener("visibilitychange", syncPlayback);
-      window.removeEventListener("blur", reset);
-      window.removeEventListener("resize", reset);
-      rive.pause();
-    };
-  }, [rive, inputs, live, reduced]);
+  const breeze = () => {
+    wind.current = { x: 0.5, strength: 1, direction: wind.current.direction === 1 ? -1 : 1 };
+  };
 
   return (
-    <section ref={root} className="room magnets" id="magnets">
-      <div ref={surface} className="room-canvas well">
-        <RiveComponent style={{ position: "absolute", inset: 0 }} aria-hidden="true" />
-        {failed && <p role="status">The elastic shapes couldn’t load. Please refresh to try again.</p>}
+    <section ref={root} className="room magnets breeze" id="magnets">
+      <div className="room-copy breeze-copy">
+        <p className="kicker">A passing breeze</p>
+        <h2 className="display">Move gently.<br />Watch it travel.</h2>
+        <div className="breeze-aside">
+          <p className="lede">Brush across the field.<br />The grass bends, then finds its way back.</p>
+          <button type="button" className="breeze-button" onClick={breeze}>Send a breeze <span aria-hidden="true">↗</span></button>
+        </div>
       </div>
-      <div className="room-copy invert">
-        <p className="kicker invert">Come close, or make space</p>
-        <h2 className="display">Your hand is the weather.</h2>
-        <p className="lede invert">Draw things in, or give them room. Both are kindness.</p>
-        <button
-          type="button"
-          className="text-btn invert"
-          disabled={failed || !inputs || reduced}
-          onClick={() => setMode((m) => (m === "pull" ? "push" : "pull"))}
-        >
-          Mode: {mode}
-        </button>
+      <div className="breeze-field"
+        onPointerMove={(event) => {
+          if (!event.isPrimary) return;
+          const rect = event.currentTarget.getBoundingClientRect();
+          const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+          const delta = lastX.current === null ? 0.005 : x - lastX.current;
+          if (Math.abs(delta) > 0.0002) {
+            wind.current = { x, strength: Math.min(1.15, wind.current.strength + Math.abs(delta) * 9), direction: delta > 0 ? 1 : -1 };
+          }
+          lastX.current = x;
+        }}
+        onPointerLeave={() => { lastX.current = null; }}
+        onPointerCancel={() => { lastX.current = null; }}
+        onPointerUp={(event) => { if (event.pointerType !== "mouse") lastX.current = null; }}
+        aria-hidden="true">
+        <canvas ref={canvasRef} />
+        <span className="breeze-caption">a small movement, carried onward</span>
       </div>
     </section>
   );

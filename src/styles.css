@@ -1398,3 +1398,53 @@ kbd {
 @media (prefers-reduced-motion: reduce) {
   .loosen-dot { transition: none; }
 }
+
+.room.breeze,
+.scroll-home .room.breeze {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  background: #111b18;
+  color: #eee9db;
+  padding: clamp(4rem, 10vh, 7rem) 0 0;
+}
+.breeze .breeze-copy,
+.scroll-home .breeze .breeze-copy {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  column-gap: 7vw;
+  width: 100%;
+  max-width: none;
+  padding: 0 7vw;
+}
+.breeze .kicker { grid-column: 1 / -1; color: #a6ae99; margin-bottom: 1.3rem; }
+.breeze .display { font-size: clamp(3.1rem, 5.8vw, 6.4rem); line-height: 1.04; color: #eee9db; margin: 0; }
+.breeze-aside { align-self: end; padding-bottom: 0.35rem; }
+.breeze .lede { color: #b5bdab; font-size: clamp(0.95rem, 1.25vw, 1.15rem); }
+.breeze-button {
+  pointer-events: auto;
+  display: inline-flex;
+  gap: 2rem;
+  align-items: center;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid #68755f;
+  color: #dedec9;
+  padding: 0.8rem 0;
+  margin-top: 1.3rem;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.breeze-button:hover { color: #fff7db; border-color: #dedec9; }
+.breeze-button:focus-visible { outline: 2px solid #dedec9; outline-offset: 6px; }
+.breeze-field { position: relative; width: 100%; height: 57svh; min-height: 320px; flex: 1; touch-action: pan-y; }
+.breeze-field canvas { display: block; width: 100%; height: 100%; position: absolute; inset: 0; }
+.breeze-caption { position: absolute; bottom: 1.6rem; left: 0; right: 0; text-align: center; color: #929e85; font-size: 0.65rem; letter-spacing: 0.16em; pointer-events: none; }
+@media (max-width: 760px) {
+  .breeze .breeze-copy,
+  .scroll-home .breeze .breeze-copy { grid-template-columns: 1fr; gap: 0; }
+  .breeze .display { font-size: clamp(3rem, 10vw, 4.5rem); }
+  .breeze-aside { margin-top: 1.4rem; }
+  .breeze-field { min-height: 300px; height: 43svh; }
+}
