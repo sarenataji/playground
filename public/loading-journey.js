@@ -41,7 +41,7 @@
     const elapsed = performance.now() - started;
     const step = Math.min(2, Math.floor(elapsed / 600));
     count.textContent = String(3 - step).padStart(2, '0');
-    copy.textContent = ['Let the outside fall away.', 'Follow a little warmth.', 'Something opens.'][step];
+    copy.textContent = ['Make room for a little wonder.', 'Let curiosity wander.', 'Here comes a different view.'][step];
     // This is an arrival countdown, not a fabricated download percentage.
     // Hold at 01 until the destination has actually mounted/rendered.
     if (ready && (reduced.matches || elapsed >= 1800)) finish();

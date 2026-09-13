@@ -49,17 +49,25 @@ The ending returns to participation. Thoughts, feelings, and the sense of self c
 | Chapter | Phase | Visual or interaction | What it introduces |
 | --- | --- | --- | --- |
 | 1. The movie | `inside` | A living 3D room with phone, window, and cup hotspots | An ordinary moment can feel like everything |
-| 2. The story | `story` | Scroll reveals a message, interpretation, and identity statement in layered cards | The difference between what happened and what was added |
+| 2. The story | `story` | Scroll reveals a message, interpretation, and identity statement along fine, open text contours | The difference between what happened and what was added |
 | 3. The soundtrack | `sensation` | A body outline with pulsing chest rings | Thought and sensation color the moment together |
 | 4. A little distance | `pullback` | Continuous camera retreat out of the room and through the TV-head reveal | The experience remains while the frame widens |
 | 5. The viewer | `orbit` | A seated TV-headed figure; mouse, drag, arrow keys, and view buttons | The useful first step of observing |
 | 6. Attention edits | `attention` | Return toward the live room; select message, window, or cup | Attention changes foreground and interpretation |
-| 7. Make the shift | `observer` | Choose a feeling and reframe it; the visual card gains space around it | Practice noticing without removing the feeling |
-| 8. Notice the watcher | `inquiry` | Explore inner voice, mental image, and felt location; the lens changes | The felt observer can also be noticed |
-| 9. An open frame | `unframe` | The figure fades and a boundary expands away among experiential fragments | No additional watcher needs to be illustrated |
+| 7. Make the shift | `observer` | Choose a feeling and reframe it; an organic contour expands around the words | Practice noticing without removing the feeling |
+| 8. Notice the watcher | `inquiry` | Try “I am watching”; choose Yes, Not sure, or Something else for a tailored next step | The felt observer can also be noticed |
+| 9. An open frame | `unframe` | A boundary expands away among experiential fragments | No additional watcher needs to be illustrated |
 | 10. Life continues | `rest` | The living room softly returns behind the open composition | Experience and participation continue |
 
 The section after the scroll journey summarizes the three shifts and provides an interactive check-in. It reinforces noticing rather than trying to blank the mind or maintain a perfectly calm watcher.
+
+### Polish and selectable paths
+
+The original Three.js room → TV head → seated viewer/orbit → return camera path and chapter boundaries remain intact. Chapters 7–8 now use an open abstract composition with the 3D layer hidden so the figure cannot cross the exercises’ text. The 3D room returns at the ending as before.
+
+Selecting message, window, or cup in chapter 6 carries a visual thread into chapters 7–10: terracotta lines for thought, sage light for seeing, or golden ripples for sensation. Chapter 7 lets visitors change that choice. The paths alter the prompt, abstract contours/colors, and ending reminder; they share the same philosophical progression. Scroll progressively expands the composition. These are artistic accompaniments, not claims that choosing a path changes awareness.
+
+Chapter 6 distinguishes awareness from attention and reflects back the details actually explored. Chapter 7 invites a pause and a personal check rather than equating a button click with insight. Chapter 8 offers a concrete inner-sentence experiment and supportive follow-ups for all three answers; uncertainty is not a failure. Hard cards have been softened into typography, fine rules, and organic outlines. Desktop alignment is the primary design target. On short/narrow screens, exercise content can scroll within its reserved area to keep every choice reachable above the footer.
 
 Current examples use a single continuous afternoon. Further situations or visual variations are welcome if each clarifies the concept and preserves the full progression. Ten chapters is the current structure, not a permanent limit.
 
@@ -82,7 +90,7 @@ npm run build
 node --test tests/witness.test.mjs
 ```
 
-Visually check desktop and short mobile viewports, particularly the story stack, practice card, inquiry panel, footer clearance, and opening/ending transitions. Check attention selection, feeling reframing, watcher selection, backward navigation, and pause behavior. The latest implementation passed the build and camera/chapter tests and was inspected at 1280×800, 390×844, and 375×667. These checks are not a substitute for testing future changes.
+Visually check desktop and short mobile viewports, particularly the story stack, practice card, inquiry panel, footer clearance, and opening/ending transitions. Check attention history, feeling reframing, all three watcher responses, path persistence through the ending, backward navigation, and pause behavior. The latest implementation passed the build and camera/chapter tests and was inspected at 1280×800, 390×844, and 375×667. The subsequent polish was also inspected at 1440×900, 1280×800, and 375×667. Its browser checks covered attention history, feeling reframing, all three inquiry answers, theme persistence, narrow-screen choice access, pause navigation, and reduced motion with no runtime errors. These checks are not a substitute for testing future changes.
 
 ## Background supplied by the user
 
