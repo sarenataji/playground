@@ -28,6 +28,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Keep rooms that are absent from the scrolling homepage out of its initial load.
 const roomModules = {
+  "/practice/gap": () => import("./pages/practice/Gap").then((m) => ({ default: m.Gap })),
+  "/practice": () => import("./pages/practice/Practice").then((m) => ({ default: m.Practice })),
+  "/practice/layers": () => import("./pages/practice/Layers").then((m) => ({ default: m.Layers })),
   "/breathe": () => import("./components/Breath").then((m) => ({ default: m.Breath })),
   "/dawn": () => import("./components/Dawn").then((m) => ({ default: m.Dawn })),
   "/pond": () => import("./components/Pond").then((m) => ({ default: m.Pond })),
@@ -35,6 +38,9 @@ const roomModules = {
   "/hum": () => import("./components/Hum").then((m) => ({ default: m.Hum })),
   "/witness": () => import("./pages/Witness").then((m) => ({ default: m.Witness })),
 };
+const Gap = lazy(roomModules["/practice/gap"]);
+const Practice = lazy(roomModules["/practice"]);
+const Layers = lazy(roomModules["/practice/layers"]);
 const Breath = lazy(roomModules["/breathe"]);
 const Dawn = lazy(roomModules["/dawn"]);
 const Pond = lazy(roomModules["/pond"]);
@@ -60,6 +66,12 @@ function RouteReady({ children, path }: { children: ReactNode; path: string }) {
 
 function RouteBody({ path }: { path: string }) {
   switch (path) {
+    case "/practice/gap":
+      return <Gap />;
+    case "/practice":
+      return <Practice />;
+    case "/practice/layers":
+      return <Layers />;
     case "/witness":
       return <Witness />;
     case "/":

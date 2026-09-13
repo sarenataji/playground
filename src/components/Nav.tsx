@@ -5,6 +5,7 @@ import { MapOverlay } from "./MapOverlay";
 
 const ROOM_LINKS = [
   { href: "/witness", label: "Witness" },
+  { href: "/practice", label: "Practice" },
   { href: "/rooms", label: "Rooms" },
   { href: "/breathe", label: "Breathe" },
   { href: "/dawn", label: "Dawn" },
@@ -34,6 +35,7 @@ export function Nav() {
           <a href="#play">Touch</a>
           <a href="/rooms">Rooms</a>
           <a href="/witness">Witness</a>
+          <a href="/practice">Practice</a>
         </nav>
       </header>
     );
@@ -47,7 +49,7 @@ export function Nav() {
         </a>
         <nav>
           {ROOM_LINKS.map((l) => (
-            <a key={l.href} href={l.href} aria-current={path === l.href ? "page" : undefined}>
+            <a key={l.href} href={l.href} aria-current={path === l.href || (l.href === "/practice" && path.startsWith("/practice/")) ? "page" : undefined}>
               {l.label}
             </a>
           ))}

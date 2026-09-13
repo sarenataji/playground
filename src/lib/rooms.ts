@@ -275,4 +275,23 @@ rooms.push({
   bloom: "#30251e", sky: "#191d22", invert: true, inkRgb: [0.7, 0.55, 0.35],
 });
 
+rooms.push({
+  path: "/practice", id: "practice", name: "Practice", verb: "Explore",
+  note: "Small experiments in noticing.",
+  paper: "#f5f1e8", ink: "#2b332c", dust: "#716b5f", accent: "#547a65",
+  bloom: "#dce4d5", sky: "#f0eadb", invert: false, inkRgb: [0.3, 0.42, 0.32],
+}, {
+  path: "/practice/layers", id: "layers", name: "Layers", verb: "Untangle",
+  note: "One moment. See what each layer adds.",
+  paper: "#f5f1e8", ink: "#2b332c", dust: "#716b5f", accent: "#547a65",
+  bloom: "#dce4d5", sky: "#f0eadb", invert: false, inkRgb: [0.3, 0.42, 0.32],
+});
+
+rooms.push({
+  path: "/practice/gap", id: "gap", name: "The Gap", verb: "Pause",
+  note: "A little room before the response.",
+  paper: "#f5f1e8", ink: "#2b332c", dust: "#756b5b", accent: "#9c805a",
+  bloom: "#ebe2d1", sky: "#f0eadb", invert: false, inkRgb: [0.5, 0.4, 0.28],
+});
+
 export const destinations = rooms.filter((r) => r.id !== "home" && r.id !== "rooms");
