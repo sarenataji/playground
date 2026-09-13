@@ -1179,9 +1179,14 @@ kbd {
   background: #e7e0d4;
 }
 
-.scroll-home .tunnel {
-  background: #070707;
-  color: var(--paper);
+.tunnel {
+  background: #0b0d10;
+  color: #f3eee6;
+}
+
+.tunnel .kicker.invert,
+.tunnel .lede.invert {
+  color: #cfc6ba;
 }
 
 .scroll-home .arena {
@@ -1447,4 +1452,32 @@ kbd {
   .breeze .display { font-size: clamp(3rem, 10vw, 4.5rem); }
   .breeze-aside { margin-top: 1.4rem; }
   .breeze-field { min-height: 300px; height: 43svh; }
+}
+
+/* Depth fills the viewport in both the homepage and its own room. */
+.room.tunnel {
+  height: 100svh;
+  min-height: 100svh;
+  display: block;
+}
+.tunnel .room-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  touch-action: pan-y;
+}
+.tunnel .room-copy {
+  padding: clamp(2rem, 7vh, 5rem) 5vw;
+  max-width: 44rem;
+  background: radial-gradient(ellipse at top left, #0b0d10 30%, #0b0d1000 72%);
+}
+.tunnel .room-copy .lede { max-width: 28rem; }
+@media (max-width: 650px) {
+  .tunnel .room-copy { padding: 5vh 6vw; }
+  .tunnel .display { font-size: clamp(2.4rem, 10vw, 3.5rem); }
 }
