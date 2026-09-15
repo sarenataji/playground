@@ -14,25 +14,33 @@ export function Hero({ variant = "rooms" }: { variant?: "rooms" | "original" }) 
   const blobRef = useRef<HTMLCanvasElement>(null);
 
   useGSAP(
-    () => {
+    (_context, contextSafe) => {
       if (!root.current || prefersReducedMotion()) return;
-      document.fonts.ready.then(() => {
-        const split = SplitText.create(
-          variant === "original" ? ".hero-line" : ".leave, .play-word, .outside-word",
+      let cancelled = false;
+      let split: SplitText | undefined;
+      const lines = root.current.querySelectorAll(
+        variant === "original" ? ".hero-line" : ".leave, .play-word, .outside-word",
+      );
+      // Reserve the final layout while fonts load and the letters appear.
+      gsap.set(lines, { opacity: 0 });
+      document.fonts.ready.then(contextSafe!(() => {
+        if (cancelled) return;
+        split = SplitText.create(
+          lines,
           {
             type: "chars",
             charsClass: "char",
           },
         );
-        gsap.from(split.chars, {
-          yPercent: 110,
-          rotateZ: 4,
-          opacity: 0,
-          stagger: 0.018,
-          duration: 1.15,
-          ease: "power4.out",
+        gsap.set(split.chars, { opacity: 0 });
+        gsap.set(lines, { clearProps: "opacity" });
+        gsap.to(split.chars, {
+          opacity: 1,
+          stagger: 0.075,
+          duration: 0,
+          delay: 0.2,
         });
-      });
+      }));
       gsap.from(".stamp", {
         scale: 0.6,
         opacity: 0,
@@ -45,8 +53,12 @@ export function Hero({ variant = "rooms" }: { variant?: "rooms" | "original" }) 
         { strokeDashoffset: 80 },
         { strokeDashoffset: 0, duration: 1.1, ease: "power2.inOut", delay: 0.9 },
       );
+      return () => {
+        cancelled = true;
+        split?.revert();
+      };
     },
-    { scope: root, dependencies: [variant] },
+    { scope: root, dependencies: [variant], revertOnUpdate: true },
   );
 
   useEffect(() => {
