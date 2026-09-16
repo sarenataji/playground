@@ -267,7 +267,7 @@ export default function App() {
         }`}
       >
         {path !== "/" && path !== "/playground" && <Atmosphere />}
-        <Nav />
+        {path !== "/witness" && <Nav />}
         <Suspense fallback={<main className="page" style={{ minHeight: "100svh" }} aria-busy="true"><p role="status" className="lede">Opening the room…</p></main>}>
           <RouteReady key={path} path={path}><RouteBody path={path} /></RouteReady>
         </Suspense>

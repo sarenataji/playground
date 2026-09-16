@@ -3,9 +3,9 @@ html[data-room="witness"] body { cursor: auto; }
 html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, html[data-room="witness"] .ink-layer { display: none; }
 .witness-page { position: relative; color: #443f35; background: #f7f6f2; --witness-ink: #443f35; }
 .witness-page button { cursor: pointer; }
-.witness-nav { position: fixed; inset: 0 0 auto; z-index: 35; padding: 27px 3.5vw; display: flex; justify-content: space-between; align-items: center; color: #342f26; pointer-events: none; transition: color .4s; }
+.witness-nav { position: fixed; inset: 0 0 auto; z-index: 35; padding: 1.25rem 4vw; display: flex; justify-content: space-between; align-items: center; color: #342f26; pointer-events: none; transition: color .4s; }
 .witness-nav a { pointer-events: auto; }
-.witness-nav a:first-child { font: 400 26px var(--display); letter-spacing: -.05em; }
+.witness-nav a:first-child { font: italic 400 1.35rem/1 var(--display); letter-spacing: 0; }
 .witness-nav > span, .witness-nav a:last-child { font-size: 10px; letter-spacing: .1em; }
 .witness-nav > span { text-transform: uppercase; }
 .witness-nav.is-dark { color: #fff6e6; text-shadow: 0 1px 12px #18251b; }
@@ -153,9 +153,7 @@ html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, h
   .witness-chapter-status p { max-width: 230px; }
 }
 @media (max-width: 650px) {
-  .witness-nav { padding: 22px; }
   .witness-nav > span { display: none; }
-  .witness-nav a:first-child { font-size: 24px; }
   .witness-nav a:last-child { font-size: 9px; }
   .witness-journey { height: 1900svh; }
   .witness-kicker { font-size: 8px; letter-spacing: .13em; }
