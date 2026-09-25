@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID, randomBytes } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
+import { createSyncHandler } from '../api/notes-sync.js';
 const url=process.env.SUPABASE_URL, service=process.env.SUPABASE_SERVICE_ROLE_KEY, anon=process.env.VITE_SUPABASE_ANON_KEY;
 test('live storage, access boundaries, owner actions, idempotency and persistent rate limiting', { skip: !service || !url || !anon }, async () => {
   const options={auth:{persistSession:false,autoRefreshToken:false}};
@@ -22,6 +23,11 @@ test('live storage, access boundaries, owner actions, idempotency and persistent
     const created=await admin.auth.admin.createUser({email,password,email_confirm:true}); assert.equal(created.error,null); userId=created.data.user.id;
     assert.equal((await stranger.auth.signInWithPassword({email,password})).error,null);
     assert.equal((await stranger.rpc('is_note_owner')).data,false);
+    const sync=createSyncHandler({backup:{sync:async()=>({synced:0,pending:false})}});
+    const reply=()=>({setHeader(){},status(n){this.statusCode=n;return this;},json(v){this.body=v;return this;}});
+    let syncReply=reply();
+    await sync({method:'POST',headers:{authorization:`Bearer ${(await stranger.auth.getSession()).data.session.access_token}`}},syncReply);
+    assert.equal(syncReply.statusCode,403);
     const denied=await stranger.from('guest_notes').select('*'); assert.equal(denied.error,null); assert.deepEqual(denied.data,[]);
     assert.ok((await stranger.from('note_owners').insert({user_id:userId})).error);
     const deniedChange=await stranger.from('guest_notes').update({favorite:true}).eq('id',id).select(); assert.deepEqual(deniedChange.data,[]);
@@ -30,6 +36,11 @@ test('live storage, access boundaries, owner actions, idempotency and persistent
     assert.equal((await admin.from('note_owners').insert({user_id:userId})).error,null);
     assert.equal((await owner.auth.signInWithPassword({email,password})).error,null);
     assert.equal((await owner.rpc('is_note_owner')).data,true);
+    if(process.env.BLOB_READ_WRITE_TOKEN) {
+      syncReply=reply();
+      await sync({method:'POST',headers:{authorization:`Bearer ${(await owner.auth.getSession()).data.session.access_token}`}},syncReply);
+      assert.equal(syncReply.statusCode,200);
+    }
     assert.equal((await owner.from('guest_notes').select('*').eq('id',id).single()).data.message,payload.p_message);
     const changed=await owner.from('guest_notes').update({favorite:true,archived:true,read_at:new Date().toISOString()}).eq('id',id).select().single();
     assert.equal(changed.error,null); assert.equal(changed.data.favorite,true); assert.equal(changed.data.archived,true);
@@ -39,6 +50,7 @@ test('live storage, access boundaries, owner actions, idempotency and persistent
   } finally {
     await admin.from('guest_notes').delete().eq('id',id);
     await admin.from('note_submissions').delete().eq('visitor',visitorHash);
+    await admin.from('guest_note_receipts').delete().eq('id',id);
     if(userId) await admin.auth.admin.deleteUser(userId);
   }
 });

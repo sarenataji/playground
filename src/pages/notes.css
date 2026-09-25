@@ -129,3 +129,6 @@
 }
 
 @media(max-width:700px) { .note-signoff input { font-size:16px; } }
+
+.notes-draft-status { text-align:center; font-size:11px; color:var(--note-muted); margin:10px 0 0; }
+.notes-draft-status button { margin-left:5px; font-size:11px; }

@@ -1,27 +1,33 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { papers, stamps, stampGlyph, type Paper, type Stamp } from '@/lib/notes';
+import { readNoteDraft, saveNoteDraft, clearNoteDraft } from '@/lib/noteDraft';
 import './notes.css';
 
 export function LeaveNote() {
-  const [message, setMessage] = useState('');
-  const [name, setName] = useState('');
-  const [color, setColor] = useState<Paper>('butter');
-  const [stamp, setStamp] = useState<Stamp>('flower');
+  const [draft] = useState(readNoteDraft);
+  const [draftSaved, setDraftSaved] = useState(false);
+  const [message, setMessage] = useState(draft?.message ?? '');
+  const [name, setName] = useState(draft?.name ?? '');
+  const [color, setColor] = useState<Paper>(draft?.color ?? 'butter');
+  const [stamp, setStamp] = useState<Stamp>(draft?.stamp ?? 'flower');
   const [website, setWebsite] = useState('');
   const [status, setStatus] = useState<'writing' | 'sending' | 'sent'>('writing');
   const [error, setError] = useState('');
   const pending = useRef(false);
-  const requestId = useRef<string | null>(null);
+  const requestId = useRef<string>(draft?.requestId ?? crypto.randomUUID());
   const confirmation = useRef<HTMLHeadingElement>(null);
   useEffect(() => { document.title = 'Leave a little something · Sarena'; }, []);
   useEffect(() => { if (status === 'sent') confirmation.current?.focus(); }, [status]);
-  const changed = () => { requestId.current = null; setError(''); };
+  useEffect(() => {
+    if (status === 'sent' || (!message && !name)) { clearNoteDraft(); setDraftSaved(false); return; }
+    setDraftSaved(saveNoteDraft({ message, name, color, stamp, requestId: requestId.current }));
+  }, [message, name, color, stamp, status]);
+  const changed = () => { requestId.current = crypto.randomUUID(); setError(''); };
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (pending.current || !message.trim()) return;
     pending.current = true;
     setStatus('sending'); setError('');
-    requestId.current ??= crypto.randomUUID();
     try {
       const response = await fetch('/api/notes', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -32,6 +38,7 @@ export function LeaveNote() {
       if (!response.ok || result?.saved !== true) {
         throw new Error(result?.error || 'The mailbox isn’t available just yet. Your note is still here; please try again later.');
       }
+      clearNoteDraft();
       setStatus('sent');
     } catch (failure) {
       setStatus('writing');
@@ -48,7 +55,7 @@ export function LeaveNote() {
       <h1 ref={confirmation} tabIndex={-1}>A little piece of you,<br /><em>now here.</em></h1>
       <p>Your note is safely in Sarena’s mailbox.<br />Thank you for stopping by.</p>
       <a className="notes-primary" href="/rooms">Wander a little longer <span>↗</span></a>
-      <button className="notes-text-button" onClick={() => { setMessage(''); setName(''); requestId.current = null; setStatus('writing'); }}>Leave another little something</button>
+      <button className="notes-text-button" onClick={() => { setMessage(''); setName(''); requestId.current = crypto.randomUUID(); setStatus('writing'); }}>Leave another little something</button>
     </section> : <>
       <header className="notes-heading">
         <p className="notes-eyebrow"><span aria-hidden="true">✳</span> A small hello goes a long way</p>
@@ -74,6 +81,7 @@ export function LeaveNote() {
           {error && <p className="notes-error" role="alert">{error}</p>}
           <button className="notes-primary note-send" type="submit" disabled={!message.trim() || status === 'sending'}>{status === 'sending' ? 'Delivering your note…' : 'Send to Sarena'}<span aria-hidden="true">↗</span></button>
         </fieldset>
+        {draftSaved && <p className="notes-draft-status">Unsent draft saved on this device. <button type="button" className="notes-text-button" disabled={status === 'sending'} onClick={() => { clearNoteDraft(); setMessage(''); setName(''); requestId.current = crypto.randomUUID(); setError(''); }}>Clear draft</button></p>}
         <p className="notes-privacy"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="7" rx="1.5" /><path d="M5.5 7V4a2.5 2.5 0 0 1 5 0v3" /></svg> Just between you and Sarena.</p>
       </form>
       <p className="notes-footnote">Little notes. Big feelings. All welcome.</p>

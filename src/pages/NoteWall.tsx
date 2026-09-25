@@ -14,6 +14,7 @@ export function NoteWall() {
   const [filter, setFilter] = useState<Filter>('all');
   const [loading, setLoading] = useState(false);
   const [more, setMore] = useState(false);
+  const [syncNotice, setSyncNotice] = useState('');
   const [selected, setSelected] = useState<GuestNote | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -53,6 +54,20 @@ export function NoteWall() {
     const version = ++generation.current;
     setLoading(true); setError('');
     try {
+      if (offset === 0) {
+        setSyncNotice('');
+        try {
+          const { data: { session } } = await notesClient.auth.getSession();
+          if (!session) throw new Error('No session');
+          const response = await fetch('/api/notes-sync', { method: 'POST', headers: { Authorization: `Bearer ${session.access_token}` }, signal: AbortSignal.timeout(18000) });
+          const result = await response.json();
+          if (!response.ok || result.pending) {
+            if (version === generation.current) setSyncNotice('Some notes are safely waiting to join your wall. Refresh again in a moment.');
+          }
+        } catch {
+          if (version === generation.current) setSyncNotice('Backup notes couldn’t be checked right now. You can still read the notes below.');
+        }
+      }
       let query = notesClient.from('guest_notes').select('*').eq('archived', filter === 'archive');
       if (filter === 'new') query = query.is('read_at', null);
       if (filter === 'favorites') query = query.eq('favorite', true);
@@ -135,6 +150,7 @@ export function NoteWall() {
       <header className="wall-heading"><div><p className="notes-eyebrow">The lovely people who stopped by</p><h1>Your little <em>collection.</em></h1><p>A wall of thoughts, tiny hellos, and pieces of people.</p></div><a className="wall-write-link" href="/leave-a-note">Visit the writing desk ↗</a></header>
       <div className="wall-toolbar"><div className="wall-filters" role="group" aria-label="Filter notes">{filters.map(f => <button key={f.id} aria-pressed={filter === f.id} disabled={busy} onClick={() => setFilter(f.id)}>{f.label}</button>)}</div><button className="notes-text-button" onClick={() => void load()} disabled={loading || busy}>Refresh ↻</button></div>
       {error && !selected && <p className="notes-error" role="alert">{error}</p>}
+      {syncNotice && <p className="wall-status" role="status">{syncNotice}</p>}
       {loading && <p role="status" className="wall-status">Gathering your notes…</p>}
       {!loading && !error && notes.length === 0 && <div className="wall-empty"><span aria-hidden="true">✧</span><h2>{filter === 'all' ? 'A little space for lovely things.' : 'Nothing here just yet.'}</h2><p>{filter === 'all' ? 'Share the writing desk. The first hello will find its way here.' : 'Your collection will be here when you need it.'}</p><a href="/leave-a-note" className="notes-text-button">Open the writing desk ↗</a></div>}
       <div className="wall-grid">{notes.map(note => <button className={`wall-card paper-${note.color}`} key={note.id} onClick={() => { setSelected(note); setConfirmDelete(false); setError(''); if (!note.read_at) void update(note, { read_at: new Date().toISOString() }); }}>

@@ -1,6 +1,18 @@
 {
   "rewrites": [
-    { "source": "/leave-a-note", "destination": "/index.html" },
-    { "source": "/my-notes", "destination": "/index.html" }
+    {
+      "source": "/leave-a-note",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/my-notes",
+      "destination": "/index.html"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/notes-sync",
+      "schedule": "0 9 * * *"
+    }
   ]
 }

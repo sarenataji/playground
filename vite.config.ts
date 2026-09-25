@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import notesHandler from "./api/notes.js";
+import syncHandler from "./api/notes-sync.js";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 
@@ -9,7 +10,8 @@ export default defineConfig(({ mode }) => {
   plugins: [react(), {
     name: "notes-local-api",
     configureServer(server) {
-      server.middlewares.use("/api/notes", async (req, res) => {
+      for (const [path, handler] of [["/api/notes-sync", syncHandler], ["/api/notes", notesHandler]] as const) {
+      server.middlewares.use(path, async (req, res) => {
         let raw = "";
         try {
           for await (const chunk of req) {
@@ -19,9 +21,10 @@ export default defineConfig(({ mode }) => {
           req.body = raw;
           res.status = (code) => { res.statusCode = code; return res; };
           res.json = (value) => { res.setHeader("Content-Type", "application/json"); res.end(JSON.stringify(value)); };
-          await notesHandler(req, res);
+          await handler(req, res);
         } catch { res.statusCode = 500; res.end(); }
       });
+      }
     },
   }],
   resolve: {
