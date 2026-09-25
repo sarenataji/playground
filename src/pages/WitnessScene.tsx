@@ -314,7 +314,8 @@ export default function WitnessScene({ progress, orbit, reduced, attention, anch
       if (!inView || document.hidden || renderer.getContext().isContextLost()) return;
       if (!motionPaused.current) elapsed += dt;
       const cameraProgress = cameraProgressAt(progress.current);
-      shown = reduced.current ? cameraProgress : THREE.MathUtils.damp(shown, cameraProgress, 4.2, dt);
+      const betweenStoryAndFeeling = progress.current > .14 && progress.current < .24;
+      shown = reduced.current ? cameraProgress : THREE.MathUtils.damp(shown, cameraProgress, betweenStoryAndFeeling ? 1.35 : 4.2, dt);
       const passage = phaseAt(progress.current);
       let reveal = smooth(.16, .37, shown);
       let turn = smooth(.45, .55, shown);

@@ -60,6 +60,10 @@ export function Witness() {
   const chapter = chapters[index];
   const phase = chapter.phase;
   const local = localProgress(position);
+  const ease = (t: number) => { const x = clamp(t); return x * x * (3 - 2 * x); };
+  const storyFade = phase === "story" || phase === "sensation" ? 1 - ease((position - .162) / .028) : 0;
+  const feelFade = phase === "story" || phase === "sensation" ? ease((position - .176) / .032) : 0;
+  const storyLocal = clamp((position - .09) / .09);
   const interactive = phase === "orbit";
   const canAttend = phase === "inside" || phase === "attention";
   const fieldOpen = phase === "rest" ? 1 : phase === "unframe" ? clamp(local / .7) : 0;
@@ -141,18 +145,19 @@ export function Witness() {
             <Copy eyebrow="01 / The movie" title={<>For a moment,<br /><em>this is everything.</em></>}><p>A room. Your phone. Something on your mind.<br />This is the movie of an ordinary afternoon.</p><p className="witness-instruction">Touch a detail. Then scroll to see what happens.</p></Copy>
             <div className="witness-film-label" aria-hidden="true"><i /> A moment, already unfolding</div>
           </>}
-          {phase === "story" && <>
+          {storyFade > .02 && <div className="witness-handoff" style={{ opacity: storyFade, transform: `translateY(${(1 - storyFade) * -36}px)` }}>
             <Copy eyebrow="02 / The dialogue" title={<>A fact becomes<br /><em>a whole story.</em></>}><p>There is no reply yet. The mind begins to fill in the silence.</p><p>Keep scrolling. Notice how much gets added to what you actually know.</p></Copy>
             <div className="witness-story-stack">
               <div className="witness-message-card"><span>What happened</span><p>Hey, is everything okay?</p><small>Delivered · No reply yet</small></div>
-              <div className="witness-story-card" style={{ opacity: .35 + clamp(local * 3) * .65, transform: `translateY(${(1 - clamp(local * 3)) * 22}px)` }}><span>The interpretation</span><p>“They’re disappointed in me.”</p></div>
-              <div className="witness-story-card is-identity" style={{ opacity: clamp((local - .25) * 3), transform: `translateY(${(1 - clamp((local - .25) * 3)) * 22}px)` }}><span>The story of me</span><p>“I always mess things up.”</p></div>
+              <div className="witness-story-card" style={{ opacity: .35 + clamp(storyLocal * 3) * .65, transform: `translateY(${(1 - clamp(storyLocal * 3)) * 22}px)` }}><span>The interpretation</span><p>“They’re disappointed in me.”</p><i className="witness-thought-tail" aria-hidden="true" /></div>
+              <div className="witness-story-card is-identity" style={{ opacity: clamp((storyLocal - .25) * 3), transform: `translateY(${(1 - clamp((storyLocal - .25) * 3)) * 22}px)` }}><span>The story of me</span><p>“I always mess things up.”</p><i className="witness-thought-tail" aria-hidden="true" /></div>
+              <p className="witness-scene-note">What you see and what you feel is the scene playing now.</p>
             </div>
-          </>}
-          {phase === "sensation" && <>
+          </div>}
+          {feelFade > .02 && <div className="witness-handoff" style={{ opacity: feelFade, transform: `translateY(${(1 - feelFade) * 42}px) scale(${.96 + feelFade * .04})` }}>
             <Copy eyebrow="03 / The soundtrack" title={<>And the story<br /><em>can be felt.</em></>}><p>Imagine a tightening chest. A held breath.<br />Now the thought can feel like a verdict.</p><p>The sensation and the interpretation are both part of the movie.</p></Copy>
             <div className="witness-body-visual"><div className="witness-body-head" /><div className="witness-body-outline" /><div className="witness-body-pulse"><i /><i /><i /><b /></div><span className="witness-body-label">Tension in the chest</span><div className="witness-body-caption"><span className="witness-body-thought">“I did something wrong.”</span><small>An illustration of how worry might feel</small></div></div>
-          </>}
+          </div>}
           {phase === "pullback" && <Copy eyebrow="04 / A little distance" title={<>The same moment.<br /><em>A wider view.</em></>} className="witness-copy-low"><p>The room is still there. The message is still unanswered.</p><p>What felt like the whole world becomes something you can notice.</p></Copy>}
           {interactive && <>
             <Copy eyebrow="05 / The viewer" title={<>“I can watch<br /><em>this happening.”</em></>}><p>The chair is a metaphor for taking perspective.<br />A thought can be present without becoming the whole truth.</p><p className="witness-instruction">Stay here a little. There is another discovery ahead.</p></Copy>
@@ -202,7 +207,7 @@ export function Witness() {
         </div>
       </section>
       <section className="witness-after">
-        <span className="witness-kicker">Back in your own afternoon</span><h2>The message might<br />still need a reply.</h2><p className="witness-after-intro">Awareness makes room to participate. You can feel the tension, question the story, and decide what to do next.</p>
+        <span className="witness-kicker">Back in your own afternoon</span><h2>None of this<br /><em>is who you are.</em></h2><p className="witness-after-intro">The worry is a scene. The story of me is a scene. The watcher is a scene. You do not have to become any of them. Life is already being seen.</p>
         <div className="witness-takeaways"><article><span>01 / Absorbed</span><h3>“This is my reality.”</h3><p>A thought fills the frame. An interpretation feels like a fact.</p></article><article><span>02 / Noticing</span><h3>“A thought is here.”</h3><p>The same experience has a little room around it. You can respond with more perspective.</p></article><article><span>03 / Looking closer</span><h3>“Watching is noticed, too.”</h3><p>The felt observer can be explored as part of the experience. There is no need to picture another person behind it.</p></article></div>
         <div className="witness-reflection"><span className="witness-kicker">A small check-in</span><h3>If worry returns, what could you try?</h3><div>{["Make the mind go blank", "Notice the feeling and the story", "Find a perfectly calm watcher"].map((answer, i) => <button type="button" key={answer} aria-pressed={reflection === i} onClick={() => setReflection(i)}>{answer}<span>↗</span></button>)}</div><p aria-live="polite">{reflection === null ? "There is no special state you have to achieve." : reflection === 1 ? "Yes. The worry can be present without every interpretation becoming a verdict. Even the sense of ‘me noticing’ is open to investigation." : reflection === 0 ? "Thoughts can keep arriving. Try noticing one without needing to remove it." : "Calm may come or go. The felt watcher is something to investigate, rather than a position you have to keep holding."}</p></div>
         <p className="witness-after-note">This is an invitation to explore your own experience. The TV, chair, and open space are metaphors. You don’t have to feel blank, calm, or separate from life for the inquiry to be useful.</p>

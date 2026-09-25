@@ -20,7 +20,9 @@ html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, h
 .witness-stage.is-dark .witness-edge { background: linear-gradient(90deg, #14251ee0, #14251e55 42%, #14251e0a 70%), linear-gradient(0deg, #14251ec9, transparent 20%, transparent 80%, #14251e70); }
 .witness-edge.is-absorbed { box-shadow: inset 0 0 20vw #1028209c; }
 .witness-stage[data-phase="story"] .witness-edge { background-color: #172a2344; }
-.witness-stage[data-phase="sensation"] .witness-edge { background-color: #312a2d80; }
+.witness-stage[data-phase="sensation"] .witness-edge { background-color: #312a2d80; transition: background 1.8s ease; }
+.witness-handoff { position: absolute; inset: 0; pointer-events: none; transform-origin: 62% 38%; }
+.witness-handoff .witness-copy { animation: none; }
 .witness-kicker { font: 10px var(--ui); letter-spacing: .17em; text-transform: uppercase; }
 .witness-copy { position: absolute; left: 8vw; top: 22%; max-width: 39vw; pointer-events: none; animation: witness-copy-in .65s ease both; }
 .witness-copy h2, .witness-practice h2 { font: 400 clamp(40px, 4.7vw, 76px)/1.03 var(--display); letter-spacing: -.045em; margin: 24px 0; }
@@ -44,13 +46,19 @@ html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, h
 .witness-chapters button[aria-current] > span { opacity: .7; }
 .witness-chapters button small { position: absolute; right: 100%; white-space: nowrap; padding: 8px 12px; font-size: 10px; background: #f7f6f2; color: #443f35; opacity: 0; pointer-events: none; }
 .witness-chapters button:hover small, .witness-chapters button:focus-visible small { opacity: 1; }
-.witness-story-stack { position: absolute; left: 55%; right: 10%; top: 23%; display: grid; gap: 16px; }
-.witness-message-card, .witness-story-card { border: 1px solid #eadfcd45; border-radius: 5px; padding: 24px 28px; background: #eee7d7; color: #403d34; box-shadow: 0 15px 60px #14251e33; }
+.witness-story-stack { position: absolute; left: 48%; right: 12%; top: 16%; display: grid; gap: 36px; align-content: start; justify-items: stretch; }
+.witness-message-card, .witness-story-card { border: 0; padding: 0 4px; background: none; color: #fff0d7; box-shadow: none; }
 .witness-story-stack span { display: block; line-height: 1.3; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; }
-.witness-story-stack p { font: 400 clamp(22px, 2.3vw, 32px)/1.2 var(--display); margin: 16px 0; }
-.witness-story-stack small { display: block; line-height: 1.4; font-size: 10px; opacity: .7; }
-.witness-story-card { margin-left: 20px; background: #31473ee8; color: #f6e9d4; }
-.witness-story-card.is-identity { margin-left: 40px; background: #252c2be8; }
+.witness-story-stack p { font: 400 clamp(22px, 2.3vw, 32px)/1.2 var(--display); margin: 12px 0 0; }
+.witness-story-stack small { display: block; line-height: 1.4; font-size: 10px; opacity: .7; margin-top: 10px; }
+.witness-scene-note { margin: 8px 4px 0; max-width: 34ch; font: 14px/1.6 var(--ui); color: #f6efe2; }
+.witness-story-card { position: relative; margin: 0; padding: 22px 26px 20px; border-radius: 34px 40px 32px 38px; background: #f3eadcf2; color: #3a372f; box-shadow: 0 18px 48px #10201838; }
+.witness-story-card.is-identity { margin-left: 36px; border-radius: 40px 30px 36px 34px; background: #efe3cef0; }
+.witness-thought-tail, .witness-thought-tail::before, .witness-thought-tail::after { position: absolute; border-radius: 50%; background: inherit; }
+.witness-thought-tail { left: 34px; bottom: -10px; width: 14px; height: 14px; }
+.witness-thought-tail::before { content: ""; width: 9px; height: 9px; left: -16px; top: 12px; }
+.witness-thought-tail::after { content: ""; width: 5px; height: 5px; left: -26px; top: 22px; opacity: .85; }
+.witness-story-card.is-identity .witness-thought-tail { left: 48px; }
 .witness-body-visual { position: absolute; left: 58%; top: 22%; width: 260px; height: 430px; }
 .witness-body-head { position: absolute; width: 65px; height: 78px; border: 1px solid #f5d7bc70; border-radius: 50%; left: 97px; }
 .witness-body-outline { position: absolute; top: 91px; left: 25px; width: 210px; height: 240px; border: 1px solid #f5d7bc70; border-radius: 45% 45% 20% 20%; background: linear-gradient(#ecc39d0c, transparent); mask-image: linear-gradient(#000 60%, transparent); }
@@ -146,10 +154,9 @@ html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, h
 @media (max-width: 900px) {
   .witness-copy h2 { font-size: 42px; }
   .witness-body-visual { left: 58%; transform: scale(.85); transform-origin: top left; }
-  .witness-story-stack { right: 9%; left: 54%; }
-  .witness-message-card, .witness-story-card { padding: 20px; }
-  .witness-story-card { margin-left: 8px; }
-  .witness-story-card.is-identity { margin-left: 16px; }
+  .witness-story-stack { left: 48%; right: 7%; gap: 28px; }
+  .witness-story-card { padding: 18px 20px 16px; }
+  .witness-story-card.is-identity { margin-left: 20px; }
   .witness-chapter-status p { max-width: 230px; }
 }
 @media (max-width: 650px) {
@@ -172,13 +179,14 @@ html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, h
   .witness-opening-detail p { font-size: 24px; }
   .witness-opening-detail small { font-size: 10px; }
   .witness-stage[data-phase="inside"]:has(.witness-opening-detail) .witness-copy h2 { font-size: 32px; }
-  .witness-story-stack { left: 12vw; right: 12vw; top: 43%; gap: 8px; }
-  .witness-message-card, .witness-story-card { padding: 13px 18px; }
-  .witness-story-stack p { font-size: 23px; margin: 8px 0; }
+  .witness-story-stack { left: 8vw; right: 8vw; top: 42%; gap: 22px; }
+  .witness-story-card { padding: 16px 18px 14px; }
+  .witness-story-stack p { font-size: 23px; margin: 8px 0 0; }
   .witness-story-stack span { font-size: 7px; }
   .witness-story-stack small { font-size: 8px; }
-  .witness-story-card { margin-left: 12px; }
-  .witness-story-card.is-identity { margin-left: 24px; }
+  .witness-story-card.is-identity { margin-left: 18px; }
+  .witness-thought-tail { left: 26px; }
+  .witness-story-card.is-identity .witness-thought-tail { left: 34px; }
   .witness-body-visual { left: calc(50% - 90px); top: 47%; transform: scale(.65); }
   .witness-copy-low { top: auto; bottom: 17%; max-width: 77vw; padding: 16px; background: #f7f6f2cf; border-radius: 3px; }
   .witness-copy-low h2 { font-size: 30px; }
@@ -239,9 +247,9 @@ html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, h
   .witness-copy-low { top: auto; }
   .witness-copy h2 { font-size: 31px; margin: 12px 0; }
   .witness-copy p { font-size: 10px; margin: 8px 0; }
-  .witness-story-stack { top: 43%; }
-  .witness-message-card, .witness-story-card { padding: 10px 15px; }
-  .witness-story-stack p { font-size: 20px; margin: 6px 0; }
+  .witness-story-stack { top: 40%; gap: 16px; }
+  .witness-story-card { padding: 12px 14px 10px; }
+  .witness-story-stack p { font-size: 20px; margin: 6px 0 0; }
   .witness-body-visual { top: 43%; transform: scale(.52); left: calc(50% - 70px); }
   .witness-practice { top: 11%; }
   .witness-practice h2 { font-size: 30px; margin: 12px 0; }
@@ -264,9 +272,7 @@ html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, h
 .witness-copy-body { max-width: 370px; }
 .witness-chapter-status p, .witness-footer-actions button { font-size: 12px; }
 .witness-kicker { font-size: 11px; }
-.witness-message-card, .witness-story-card, .witness-story-card.is-identity {
-  border: 0; border-left: 1px solid #f1dfb966; border-radius: 0; background: none; color: #fff0d7; box-shadow: none;
-}
+.witness-message-card { border: 0; background: none; color: #fff0d7; box-shadow: none; padding-left: 2px; }
 .witness-stage[data-phase="story"] .witness-edge { background-color: #172a2388; }
 .witness-story-stack span, .witness-story-stack small { font-size: 11px; }
 .witness-attention-readout, .witness-opening-detail { border: 0; border-radius: 0; background: radial-gradient(ellipse at center, #152e27ee, #152e2700 75%); padding: 24px 0; text-shadow: 0 2px 12px #14251e; }
@@ -362,8 +368,8 @@ html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, h
   .witness-inquiry-response .witness-inner-sentence { font-size: 31px; margin: 16px 0; }
   .witness-inquiry-response > p:not(.witness-inner-sentence) { font-size: 13px; line-height: 1.7; }
   .witness-response-coda { font-size: 11px; margin-top: 16px; }
-  .witness-story-stack { top: 45%; left: 7vw; }
-  .witness-message-card, .witness-story-card { padding: 8px 14px; }
+  .witness-story-stack { top: 44%; left: 7vw; right: 7vw; }
+  .witness-story-card { padding: 14px 16px 12px; }
   .witness-story-stack span, .witness-story-stack small { font-size: 10px; }
   .witness-story-stack p { font-size: 22px; }
   .witness-copy-low { padding: 0; background: none; text-shadow: 0 0 18px #f7f6f2; }
@@ -399,7 +405,7 @@ html[data-room="witness"] .site > .nav, html[data-room="witness"] .atmosphere, h
   .witness-copy-center h2 { font-size: 32px; }
   .witness-copy-center p { font-size: 12px; }
   .witness-copy-center .witness-path-ending { font-size: 11px; }
-  .witness-story-stack { top: 45%; }
+  .witness-story-stack { top: 42%; gap: 14px; }
   .witness-story-stack p { font-size: 19px; }
 }
 @media (min-width: 651px) {
