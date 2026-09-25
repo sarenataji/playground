@@ -1483,3 +1483,5 @@ kbd {
   .tunnel .room-copy { padding: 5vh 6vw; }
   .tunnel .display { font-size: clamp(2.4rem, 10vw, 3.5rem); }
 }
+
+.close-guestbook { display:inline-flex; align-items:center; gap:24px; margin-top:28px; border-bottom:1px solid currentColor; padding:10px 0; font-size:15px; }

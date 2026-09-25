@@ -24,3 +24,7 @@ Research and the build roadmap live in `docs/`.
 ## Witness room
 
 The `/witness` experience explores absorption, attention, and the felt observer through ten visual scroll chapters. Before continuing work on it, read the [Witness concept and continuation guide](docs/WITNESS.md). It contains the intended discovery, chapter structure, implementation map, and validation steps.
+
+## Private guestbook
+
+Write a note at `/leave-a-note`; the owner’s wall is `/my-notes`. Notes are stored in Supabase and submitted through a Vercel function. See [guestbook setup and operations](docs/NOTES.md) for configuration, owner access, and validation. `pnpm dev` runs the submission endpoint locally using `.env.local`.

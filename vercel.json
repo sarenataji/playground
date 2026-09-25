@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/leave-a-note", "destination": "/index.html" },
+    { "source": "/my-notes", "destination": "/index.html" }
+  ]
+}

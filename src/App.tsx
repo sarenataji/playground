@@ -28,6 +28,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Keep rooms that are absent from the scrolling homepage out of its initial load.
 const roomModules = {
+  "/leave-a-note": () => import("./pages/LeaveNote").then((m) => ({ default: m.LeaveNote })),
+  "/my-notes": () => import("./pages/NoteWall").then((m) => ({ default: m.NoteWall })),
   "/practice/gap": () => import("./pages/practice/Gap").then((m) => ({ default: m.Gap })),
   "/practice": () => import("./pages/practice/Practice").then((m) => ({ default: m.Practice })),
   "/practice/layers": () => import("./pages/practice/Layers").then((m) => ({ default: m.Layers })),
@@ -38,6 +40,8 @@ const roomModules = {
   "/hum": () => import("./components/Hum").then((m) => ({ default: m.Hum })),
   "/witness": () => import("./pages/Witness").then((m) => ({ default: m.Witness })),
 };
+const LeaveNote = lazy(roomModules["/leave-a-note"]);
+const NoteWall = lazy(roomModules["/my-notes"]);
 const Gap = lazy(roomModules["/practice/gap"]);
 const Practice = lazy(roomModules["/practice"]);
 const Layers = lazy(roomModules["/practice/layers"]);
@@ -66,6 +70,8 @@ function RouteReady({ children, path }: { children: ReactNode; path: string }) {
 
 function RouteBody({ path }: { path: string }) {
   switch (path) {
+    case "/leave-a-note": return <LeaveNote />;
+    case "/my-notes": return <NoteWall />;
     case "/practice/gap":
       return <Gap />;
     case "/practice":
@@ -171,6 +177,7 @@ function RouteBody({ path }: { path: string }) {
 export default function App() {
   const path = usePath();
   const room = roomByPath(path);
+  const notesPage = path === "/leave-a-note" || path === "/my-notes";
   const [open, setOpen] = useState(() => {
     if (typeof window === "undefined") return false;
     if (prefersReducedMotion()) return true;
@@ -205,10 +212,11 @@ export default function App() {
 
   useEffect(() => {
     applyTheme(room);
-  }, [room]);
+    if (notesPage) document.title = path === "/my-notes" ? "Your little collection · Sarena" : "Leave a little something · Sarena";
+  }, [room, notesPage, path]);
 
   useEffect(() => {
-    if (!open) {
+    if (!open && !notesPage) {
       document.body.style.overflow = "hidden";
       return () => {
         document.body.style.overflow = "";
@@ -217,7 +225,7 @@ export default function App() {
 
     window.scrollTo(0, 0);
 
-    if (prefersReducedMotion()) {
+    if (prefersReducedMotion() || notesPage) {
       document.body.style.overflow = "";
       const onClick = handleNavClick;
       document.addEventListener("click", onClick);
@@ -256,23 +264,23 @@ export default function App() {
       lenis.destroy();
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
-  }, [open, path]);
+  }, [open, path, notesPage]);
 
   return (
     <>
-      {!open && <Gate onUnlock={unlock} />}
+      {!open && !notesPage && <Gate onUnlock={unlock} />}
       <div
-        className={`site${open ? " is-open" : ""}${room.invert ? " is-invert" : ""}${
+        className={`site${open || notesPage ? " is-open" : ""}${room.invert ? " is-invert" : ""}${
           path === "/" || path === "/playground" ? " is-scroll-home" : ""
         }`}
       >
-        {path !== "/" && path !== "/playground" && <Atmosphere />}
-        {path !== "/witness" && <Nav />}
+        {!notesPage && path !== "/" && path !== "/playground" && <Atmosphere />}
+        {!notesPage && path !== "/witness" && <Nav />}
         <Suspense fallback={<main className="page" style={{ minHeight: "100svh" }} aria-busy="true"><p role="status" className="lede">Opening the room…</p></main>}>
           <RouteReady key={path} path={path}><RouteBody path={path} /></RouteReady>
         </Suspense>
       </div>
-      <InkLayer active={open} />
+      <InkLayer active={open && !notesPage} />
     </>
   );
 }

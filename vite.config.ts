@@ -1,9 +1,29 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
+import notesHandler from "./api/notes.js";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(({ mode }) => {
+  Object.assign(process.env, loadEnv(mode, process.cwd(), ""));
+  return {
+  plugins: [react(), {
+    name: "notes-local-api",
+    configureServer(server) {
+      server.middlewares.use("/api/notes", async (req, res) => {
+        let raw = "";
+        try {
+          for await (const chunk of req) {
+            raw += chunk;
+            if (raw.length > 8192) { res.statusCode = 413; res.end(); return; }
+          }
+          req.body = raw;
+          res.status = (code) => { res.statusCode = code; return res; };
+          res.json = (value) => { res.setHeader("Content-Type", "application/json"); res.end(JSON.stringify(value)); };
+          await notesHandler(req, res);
+        } catch { res.statusCode = 500; res.end(); }
+      });
+    },
+  }],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
@@ -37,4 +57,5 @@ export default defineConfig({
     },
   },
   appType: "spa",
+};
 });

@@ -22,6 +22,7 @@ export function Close() {
       <p className="close-note">
         This room will be here. Come rest whenever the mind is loud.
       </p>
+      <a className="close-guestbook" href="/leave-a-note">Leave a little something <span aria-hidden="true">↗</span></a>
     </footer>
   );
 }

@@ -4,3 +4,8 @@ dist
 *.local
 .vite
 .vercel
+
+supabase/.temp/
+.env
+.env.*
+!.env.example
