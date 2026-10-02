@@ -18,20 +18,20 @@ test('endpoint rejects read requests, bad JSON and wrong content types', async (
   }
 });
 test('unconfigured endpoint fails without claiming a save', async () => {
-  const prior=process.env.SUPABASE_URL; delete process.env.SUPABASE_URL;
+  const prior=process.env.NOTES_WORKER_URL; delete process.env.NOTES_WORKER_URL;
   try { const res=response(); await handler({method:'POST',headers:{'content-type':'application/json'},body:valid()},res); assert.equal(res.statusCode,503); assert.equal(res.body.saved,undefined); }
-  finally { if(prior) process.env.SUPABASE_URL=prior; }
+  finally { if(prior) process.env.NOTES_WORKER_URL=prior; }
 });
 test('upstream failure never becomes a successful delivery; retries preserve id', async () => {
   const previous={...process.env}; const originalFetch=globalThis.fetch;
-  Object.assign(process.env,{SUPABASE_URL:'https://example.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'test',NOTES_RATE_LIMIT_SECRET:'test'}); delete process.env.VERCEL;
+  Object.assign(process.env,{NOTES_WORKER_URL:'https://notes.example.com',NOTES_PROXY_SECRET:'test',NOTES_RATE_LIMIT_SECRET:'test'}); delete process.env.VERCEL;
   try {
     const note=valid(); const requests=[];
-    globalThis.fetch=async (_url,options) => { requests.push(JSON.parse(options.body)); return {ok:false,json:async()=>({message:'note_rate_limit'})}; };
+    globalThis.fetch=async (_url,options) => { requests.push(JSON.parse(options.body)); return {ok:false,status:429}; };
     const req={method:'POST',headers:{'content-type':'application/json'},body:note,socket:{remoteAddress:'127.0.0.1'}};
     let res=response(); await handler(req,res); assert.equal(res.statusCode,429); assert.equal(res.body.saved,undefined);
     globalThis.fetch=async (_url,options) => { requests.push(JSON.parse(options.body)); return {ok:true}; };
     res=response(); await handler(req,res); assert.equal(res.statusCode,201); assert.equal(res.body.saved,true);
-    assert.equal(requests[0].p_id,requests[1].p_id); assert.notEqual(requests[0].p_visitor,'127.0.0.1');
+    assert.equal(requests[0].requestId,requests[1].requestId); assert.notEqual(requests[0].visitor,'127.0.0.1');
   } finally { globalThis.fetch=originalFetch; process.env=previous; }
 });

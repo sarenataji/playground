@@ -27,4 +27,4 @@ The `/witness` experience explores absorption, attention, and the felt observer 
 
 ## Private guestbook
 
-Write a note at `/leave-a-note`; the owner’s wall is `/my-notes`. Notes are stored in Supabase and submitted through a Vercel function. See [guestbook setup and operations](docs/NOTES.md) for configuration, owner access, and validation. `pnpm dev` runs the submission endpoint locally using `.env.local`.
+Write a note at `/leave-a-note`; the owner’s wall is `/my-notes`. Notes are stored in Cloudflare D1 and submitted through a Vercel function. The private wall uses Cloudflare email-code login, restricted to the owner. See [guestbook setup and operations](docs/NOTES.md) for configuration, owner access, and validation. `pnpm dev` runs the submission endpoint locally using `.env.local`.

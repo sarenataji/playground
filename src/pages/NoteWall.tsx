@@ -1,78 +1,47 @@
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { notesClient, stampGlyph, type GuestNote } from '@/lib/notes';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { stampGlyph, type GuestNote } from '@/lib/notes';
 import './notes.css';
 
 type Filter = 'all' | 'new' | 'favorites' | 'archive';
 const filters: { id: Filter; label: string }[] = [{ id: 'all', label: 'All notes' }, { id: 'new', label: 'Unread' }, { id: 'favorites', label: 'Favorites' }, { id: 'archive', label: 'Archive' }];
 export function NoteWall() {
   const [access, setAccess] = useState<'loading' | 'out' | 'owner' | 'denied'>('loading');
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [notes, setNotes] = useState<GuestNote[]>([]);
   const [filter, setFilter] = useState<Filter>('all');
   const [loading, setLoading] = useState(false);
   const [more, setMore] = useState(false);
-  const [syncNotice, setSyncNotice] = useState('');
   const [selected, setSelected] = useState<GuestNote | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const generation = useRef(0);
-  const accessGeneration = useRef(0);
   useEffect(() => {
     document.title = 'Your little collection · Sarena';
-    const client = notesClient;
-    if (!client) { setAccess('out'); return; }
-    let alive = true;
-    async function check() {
-      const version = ++accessGeneration.current;
-      try {
-        const { data: { session }, error: sessionError } = await client!.auth.getSession();
-        if (sessionError) throw sessionError;
-        let next: typeof access = 'out';
-        if (session) {
-          const { data, error: ownerError } = await client!.rpc('is_note_owner');
-          if (ownerError) throw ownerError;
-          next = data === true ? 'owner' : 'denied';
-        }
-        if (alive && version === accessGeneration.current) setAccess(next);
-      } catch {
-        if (alive && version === accessGeneration.current) { setAccess('out'); setError('Unable to check your session. Please try signing in again.'); }
-      }
+    const ownerOrigin = import.meta.env.VITE_NOTES_ORIGIN;
+    if (ownerOrigin && window.location.origin !== ownerOrigin) {
+      window.location.replace(`${ownerOrigin}/my-notes`);
+      return;
     }
-    void check();
-    const { data: { subscription } } = client.auth.onAuthStateChange(() => {
-      // Leave the auth callback before calling another Supabase operation.
-      setTimeout(() => { if (alive) void check(); }, 0);
-    });
-    return () => { alive = false; subscription.unsubscribe(); };
+    let alive = true;
+    void fetch('/api/private/session', { redirect: 'error', cache: 'no-store' })
+      .then(response => { if (alive) setAccess(response.ok ? 'owner' : 'out'); })
+      .catch(() => { if (alive) setAccess('out'); });
+    return () => { alive = false; };
   }, []);
 
+  async function request(path: string, options: RequestInit = {}) {
+    const response = await fetch(path, { ...options, redirect: 'error', cache: 'no-store', headers: { 'Content-Type': 'application/json', ...options.headers } });
+    if (response.status === 401 || response.status === 403) setAccess('out');
+    if (!response.ok) throw new Error('Request failed');
+    return response.json();
+  }
+
   const load = useCallback(async (offset = 0) => {
-    if (!notesClient) return;
     const version = ++generation.current;
     setLoading(true); setError('');
     try {
-      if (offset === 0) {
-        setSyncNotice('');
-        try {
-          const { data: { session } } = await notesClient.auth.getSession();
-          if (!session) throw new Error('No session');
-          const response = await fetch('/api/notes-sync', { method: 'POST', headers: { Authorization: `Bearer ${session.access_token}` }, signal: AbortSignal.timeout(18000) });
-          const result = await response.json();
-          if (!response.ok || result.pending) {
-            if (version === generation.current) setSyncNotice('Some notes are safely waiting to join your wall. Refresh again in a moment.');
-          }
-        } catch {
-          if (version === generation.current) setSyncNotice('Backup notes couldn’t be checked right now. You can still read the notes below.');
-        }
-      }
-      let query = notesClient.from('guest_notes').select('*').eq('archived', filter === 'archive');
-      if (filter === 'new') query = query.is('read_at', null);
-      if (filter === 'favorites') query = query.eq('favorite', true);
-      const { data, error: failure } = await query.order('created_at', { ascending: false }).order('id').range(offset, offset + 39);
-      if (failure) throw failure;
+      const { notes: data } = await request(`/api/private/notes?filter=${filter}&offset=${offset}`);
       if (version !== generation.current) return;
       setNotes(previous => offset ? [...previous, ...(data as GuestNote[])] : data as GuestNote[]);
       setMore(data.length === 40);
@@ -91,44 +60,24 @@ export function NoteWall() {
   }, [selected]);
   useEffect(() => { if (access !== 'owner') setSelected(null); }, [access]);
 
-  async function signIn(event: FormEvent) {
-    event.preventDefault();
-    if (!notesClient || busy) return;
-    setBusy(true); setError('');
-    try {
-      const { error: failure } = await notesClient.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: false, emailRedirectTo: `${window.location.origin}/my-notes` } });
-      if (failure) throw failure;
-      setSent(true);
-    } catch { setError('The sign-in link couldn’t be sent. Check your owner email and try again shortly.'); }
-    finally { setBusy(false); }
-  }
   async function signOut() {
-    if (!notesClient) return;
-    setBusy(true); setError('');
-    try {
-      const { error: failure } = await notesClient.auth.signOut();
-      if (failure) throw failure;
-      setAccess('out'); setNotes([]); setSelected(null); setSent(false);
-    } catch { setError('Unable to sign out. Please try again.'); }
-    finally { setBusy(false); }
+    window.location.assign('/cdn-cgi/access/logout');
   }
   async function update(note: GuestNote, changes: Partial<Pick<GuestNote, 'favorite' | 'archived' | 'read_at'>>) {
-    if (!notesClient || busy) return;
+    if (busy) return;
     setBusy(true); setError('');
     try {
-      const { data, error: failure } = await notesClient.from('guest_notes').update(changes).eq('id', note.id).select().single();
-      if (failure) throw failure;
+      const { note: data } = await request(`/api/private/notes/${note.id}`, { method: 'PATCH', body: JSON.stringify(changes) });
       setSelected(current => current?.id === note.id ? data as GuestNote : current);
       await load();
     } catch { setError('That change couldn’t be saved. Please try again.'); }
     finally { setBusy(false); }
   }
   async function remove() {
-    if (!notesClient || !selected || busy) return;
+    if (!selected || busy) return;
     setBusy(true); setError('');
     try {
-      const { error: failure } = await notesClient.from('guest_notes').delete().eq('id', selected.id);
-      if (failure) throw failure;
+      await request(`/api/private/notes/${selected.id}`, { method: 'DELETE' });
       setSelected(null); setConfirmDelete(false); await load();
     } catch { setError('The note couldn’t be deleted. Please try again.'); }
     finally { setBusy(false); }
@@ -140,17 +89,13 @@ export function NoteWall() {
       <span className="login-flower" aria-hidden="true">✿</span>
       <p className="notes-eyebrow">For your eyes only</p>
       <h1>Your little<br /><em>collection.</em></h1>
-      {!notesClient ? <p>The private wall is being connected.<br />Please come back soon.</p> : access === 'denied' ? <><p>This account doesn’t have access to Sarena’s notes.</p><button className="notes-primary" onClick={() => void signOut()} disabled={busy}>Use another account</button></> : sent ? <div role="status"><p>Check your inbox for a sign-in link.<br />Open it to visit your wall.</p><button className="notes-text-button" onClick={() => setSent(false)}>Use another email or try again</button></div> : <form onSubmit={signIn}>
-        <p>All the little hellos, kept in one place.</p>
-        <label htmlFor="owner-email">Your email</label><input id="owner-email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" disabled={busy} />
-        <button className="notes-primary" disabled={busy}>{busy ? 'Sending your link…' : 'Send me a sign-in link'} <span>↗</span></button>
-      </form>}
+      <p>All the little hellos, kept in one place.<br />Sign in with your private owner email.</p>
+      <button className="notes-primary" onClick={() => window.location.reload()}>Sign in to your collection ↗</button>
       {error && <p className="notes-error" role="alert">{error}</p>}
     </section> : <>
       <header className="wall-heading"><div><p className="notes-eyebrow">The lovely people who stopped by</p><h1>Your little <em>collection.</em></h1><p>A wall of thoughts, tiny hellos, and pieces of people.</p></div><a className="wall-write-link" href="/leave-a-note">Visit the writing desk ↗</a></header>
       <div className="wall-toolbar"><div className="wall-filters" role="group" aria-label="Filter notes">{filters.map(f => <button key={f.id} aria-pressed={filter === f.id} disabled={busy} onClick={() => setFilter(f.id)}>{f.label}</button>)}</div><button className="notes-text-button" onClick={() => void load()} disabled={loading || busy}>Refresh ↻</button></div>
       {error && !selected && <p className="notes-error" role="alert">{error}</p>}
-      {syncNotice && <p className="wall-status" role="status">{syncNotice}</p>}
       {loading && <p role="status" className="wall-status">Gathering your notes…</p>}
       {!loading && !error && notes.length === 0 && <div className="wall-empty"><span aria-hidden="true">✧</span><h2>{filter === 'all' ? 'A little space for lovely things.' : 'Nothing here just yet.'}</h2><p>{filter === 'all' ? 'Share the writing desk. The first hello will find its way here.' : 'Your collection will be here when you need it.'}</p><a href="/leave-a-note" className="notes-text-button">Open the writing desk ↗</a></div>}
       <div className="wall-grid">{notes.map(note => <button className={`wall-card paper-${note.color}`} key={note.id} onClick={() => { setSelected(note); setConfirmDelete(false); setError(''); if (!note.read_at) void update(note, { read_at: new Date().toISOString() }); }}>

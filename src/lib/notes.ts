@@ -1,8 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
-
-const url = import.meta.env.VITE_SUPABASE_URL;
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
-export const notesClient = url && key ? createClient(url, key) : null;
 export const papers = [
   { id: 'butter', name: 'Butter', color: '#f5e7aa' },
   { id: 'rose', name: 'Rose', color: '#f0d5ce' },

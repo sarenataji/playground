@@ -47,7 +47,7 @@ test('a crash after import can retry without dropping the queued note', async ()
 });
 test('submission confirms only a successful database or backup save', async () => {
   const previous={...process.env};
-  Object.assign(process.env,{SUPABASE_URL:'https://example.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'test',NOTES_RATE_LIMIT_SECRET:'test',BLOB_READ_WRITE_TOKEN:'test'}); delete process.env.VERCEL;
+  Object.assign(process.env,{NOTES_WORKER_URL:'https://notes.example.com',NOTES_PROXY_SECRET:'test',NOTES_RATE_LIMIT_SECRET:'test',BLOB_READ_WRITE_TOKEN:'test'}); delete process.env.VERCEL;
   const request={method:'POST',headers:{'content-type':'application/json'},body:note(),socket:{remoteAddress:'127.0.0.1'}};
   try {
     let queued=0;
@@ -55,15 +55,15 @@ test('submission confirms only a successful database or backup save', async () =
     let res=response();await offline(request,res);assert.equal(res.statusCode,201);assert.equal(res.body.saved,true);assert.equal(queued,1);
     const bothDown=createNotesHandler({fetchImpl:async()=>{throw new Error('Paused');},enqueue:async()=>{throw new Error('Storage down');}});
     res=response();await bothDown(request,res);assert.equal(res.statusCode,503);assert.equal(res.body.saved,undefined);
-    const limited=createNotesHandler({fetchImpl:async()=>({ok:false,json:async()=>({message:'note_rate_limit'})}),enqueue:async()=>{throw new Error('Must not bypass limit');}});
+    const limited=createNotesHandler({fetchImpl:async()=>({ok:false,status:429}),enqueue:async()=>{throw new Error('Must not bypass limit');}});
     res=response();await limited(request,res);assert.equal(res.statusCode,429);
   } finally {process.env=previous;}
 });
 test('sync rejects anonymous, wrong cron secret and non-owner callers before reading backups', async () => {
-  const previous={...process.env};Object.assign(process.env,{CRON_SECRET:'private',SUPABASE_URL:'https://example.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'test',BLOB_READ_WRITE_TOKEN:'test'});
+  const previous={...process.env};Object.assign(process.env,{CRON_SECRET:'private',NOTES_WORKER_URL:'https://notes.example.com',NOTES_PROXY_SECRET:'test',BLOB_READ_WRITE_TOKEN:'test'});
   try {
     const handler=createSyncHandler({backup:{sync:async()=>{throw new Error('Must not run');}},fetchImpl:async()=>({ok:true,json:async()=>false})});
-    for(const [method,authorization,status] of [['GET',undefined,401],['GET','Bearer wrong',401],['POST','Bearer nonowner',403]]) {
+    for(const [method,authorization,status] of [['GET',undefined,401],['GET','Bearer wrong',401],['POST','Bearer nonowner',405]]) {
       const res=response();await handler({method,headers:{authorization}},res);assert.equal(res.statusCode,status);
     }
   } finally {process.env=previous;}

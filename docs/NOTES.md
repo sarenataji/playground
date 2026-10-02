@@ -1,79 +1,65 @@
 # The little guestbook
 
-Visitors write a private note at `/leave-a-note`. The writing desk has four paper colors, four stamps, an optional name, a 1,000-character message, and a delivery confirmation that appears only after a successful database or private-backup write. The homepage closing section and room navigation link to it.
-
-The owner signs in at `/my-notes` with an emailed magic link. The wall supports unread, favorites, archive, paginated loading, reading a full note, and confirmed permanent deletion. All notes are private. There is no public list endpoint or visitor signup.
+Visitors write private notes at `/leave-a-note`. The owner’s `/my-notes` link redirects to the Cloudflare-hosted private wall. The writing desk and wall retain paper colors, stamps, drafts, favorites, archive, unread status, pagination, and permanent deletion.
 
 ## Connected services
 
-Supabase project: **Sarena Playground**, project reference `ossdpvluwqgudbmifxmg`, region `us-west-1`, in the existing `s.llabs` organization. Owner account: `sarenataji@gmail.com`.
+The public site remains at `https://sarena-playground.vercel.app`. Its guestbook now uses **Cloudflare Workers + D1**, in Laurent’s account (`laurent.lucian@gmail.com`, account `e10330ae87e731bb6a8dd05cef749390`). The account email does not grant access to the notes wall.
 
-The project is linked locally through the Supabase CLI. `.env.local` contains the app connection settings; `.env.notes-admin.local` contains the generated database password. Both are git-ignored and restricted to the local user. Vercel preview and production environments have app configuration. The GitHub `main` branch is connected to automatic production deployments.
+- Worker: `sarena-notes`, `https://sarena-notes.llabs.workers.dev`.
+- D1: `sarena-playground-notes`, ID `b6c940c6-5e42-479c-a8e4-bfd950d6cbe9`, binding `DB`.
+- Cloudflare Access app: **Sarena private notes**, ID `9a829dd0-f809-4607-801b-45b395dd9623`.
+- Access team: `laurentlo.cloudflareaccess.com`.
+- Policy: **Sarena only**, ID `8c54a4ee-c767-4aa6-965c-3dd50be91c05`. Allows exactly `sarenataji@gmail.com`.
+- Login: Cloudflare One-time PIN, emailed to the owner, with a 24-hour application session.
 
-Public browser variables:
+Access protects `sarena-notes.llabs.workers.dev/my-notes` and `sarena-notes.llabs.workers.dev/api/private/*`. Keep the submission and authenticated backup-import endpoints outside those paths. Never broaden the owner policy to Everyone or a whole email domain.
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY` (publishable/anon key, never the service key)
+The Worker independently verifies Access JWT signatures, issuer, audience, expiry, and the exact owner email. Without Access configuration or a valid owner token, private requests fail closed. Database credentials and shared secrets never enter the browser. Owner mutations require a matching Origin and can change only read status, favorite, or archive, or delete a note.
 
-Server-only variables:
+## Configuration and deployment
 
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `NOTES_RATE_LIMIT_SECRET` (random HMAC secret)
-- `BLOB_READ_WRITE_TOKEN` (private backup store credential)
-- `CRON_SECRET` (authenticates the daily sync job)
+`wrangler.jsonc` contains the account, database, Access audience, owner email, and public site URL. Worker secrets are `NOTES_PROXY_SECRET` and `NOTES_RATE_LIMIT_SECRET`. Vercel uses the same secrets plus `NOTES_WORKER_URL`, `VITE_NOTES_ORIGIN`, `BLOB_READ_WRITE_TOKEN`, and `CRON_SECRET`. `.env.example` lists the configuration; `.env.local` is ignored by Git.
 
-Never use a `VITE_` prefix for a secret. `.env.example` is a placeholder template, not usable credentials.
+```sh
+pnpm install
+pnpm dev
+pnpm test:notes
+pnpm build
+pnpm exec wrangler d1 migrations apply sarena-playground-notes --remote
+pnpm deploy:notes
+```
 
-## Implementation
+`pnpm dev` runs the Vercel submission handler locally. Owner login opens the hosted Cloudflare wall. `pnpm preview` serves static files only. To test the Worker’s database locally, use Wrangler and apply migrations with `--local`; real owner login requires Cloudflare Access.
 
-- `src/pages/LeaveNote.tsx` and `src/pages/notes.css`: writing desk and confirmation.
-- `src/pages/NoteWall.tsx`: authenticated private wall.
-- `src/lib/notes.ts`: browser Supabase client, colors, stamps, note types.
-- `api/notes.js`: Vercel submission function. The Vite dev middleware uses the same handler.
-- `server/note-validation.mjs`: server-side validation.
-- `server/note-backup.mjs`: independent private backup queue, outage rate reservations, safe replay.
-- `api/notes-sync.js`: owner-authorized or cron-authorized synchronization.
-- `src/lib/noteDraft.ts`: local draft recovery and expiration.
-- `supabase/migrations/202609250001_guest_notes.sql`: tables, row permissions, rate-limited submission function.
-- `supabase/config.toml`: owner login settings and allowed redirects. Top-level `auth.enable_signup` is false. Keep `auth.email.enable_signup` true: the CLI maps it to whether the email provider is enabled, including login for existing users.
+GitHub `main` deploys the public Vercel site automatically. Deploy the Worker separately with `pnpm deploy:notes` when its code or the shared wall UI changes. The Worker contains a built copy of the wall. Apply new D1 migrations before deploying code that uses them. The Vercel `/my-notes` redirect keeps existing links working.
 
-## Access and spam protection
+## Storage and delivery guarantees
 
-Only authenticated IDs listed in `note_owners` may read, favorite, archive, mark read, or delete notes. Even the owner cannot rewrite a visitor's message through the browser API. No browser role may insert a note directly or call the submission function. The server uses its service key to call it.
+Vercel validates a submission and forwards it to the Worker with a server-only shared secret and an HMAC of the trusted visitor IP. Direct Worker submissions derive that HMAC from Cloudflare’s trusted connecting IP. Raw IPs are not stored by this feature.
 
-Submission validates input and a honeypot. A durable database limit permits one note per minute and five per hour per HMAC of the visitor's IP. Vercel supplies the trusted IP header; local development uses the socket IP. Raw IP addresses are not stored by the note feature. Rate-limit records older than a day are deleted during subsequent submissions. Shared networks share a limit. This is basic spam protection, not a CAPTCHA or comprehensive abuse prevention.
+A transactional D1 batch stores the note, permanent content-free receipt, and rate reservation together. A database trigger limits each visitor HMAC to one note per minute and five per hour. Old rate rows are removed during subsequent submissions. Receipts survive note deletion, so delayed retries and backup imports cannot resurrect deleted notes.
 
-A client-generated UUID and permanent, content-free `guest_note_receipts` make retries idempotent. Receipts remain after note deletion, so delayed queue retries cannot resurrect a deleted note. New receipts are inserted atomically with the corresponding note; failed writes roll back both.
+Success is shown only after D1 or private backup storage confirms delivery. During an outage, the Vercel endpoint can still use the existing private Blob queue (`sarena-note-backup`, store `store_h48Cny0h1skJg3sD`). A database rate-limit rejection cannot fall through to this queue. The queue permits one distinct note per visitor HMAC per 12-minute clock window, with retries of the same note allowed.
 
-## When Supabase is paused or unavailable
+The Vercel cron `GET /api/notes-sync`, authorized with `CRON_SECRET`, imports up to 100 queued notes daily around 09:00 UTC. Imports preserve original timestamps and delete queue files only after the D1 transaction commits. The owner wall reads D1 directly and no longer depends on an outage sync completing. It does not use Supabase login or data APIs.
 
-Submissions first attempt Supabase with a short timeout. If it is unavailable, the endpoint saves the validated note in **private Vercel Blob storage**, store `store_h48Cny0h1skJg3sD` (`sarena-note-backup`). Backup reads require a server credential; the browser receives no object URL or credential. A success response means one of these server-side stores confirmed the write. A database rate-limit rejection never falls through to backup.
+Unsent drafts stay in browser local storage for up to seven days and are cleared on success or with Clear draft. If both stores fail, the form retains the draft and shows a delivery error.
 
-The backup queue uses immutable, per-note files and create-only rate reservations. During outages, a shared network may submit one distinct note per 12-minute clock window; retries of that same note remain allowed. This conservative fallback limit does not require Supabase. Old outage rate reservations are cleaned after two days by the sync job. Queued notes have no automatic expiry.
+## Migration from Supabase
 
-After Supabase resumes, opening/refreshing the owner wall synchronizes up to 20 queued notes. A Vercel cron job also attempts up to 100 daily around 09:00 UTC (Hobby cron timing is approximate). It calls `GET /api/notes-sync` with `Authorization: Bearer <CRON_SECRET>`. Manual wall sync uses `POST /api/notes-sync` with the owner's Supabase JWT, verified against `is_note_owner`. Both routes return only progress counts, never note contents. Supabase receives the original submission time. Queue entries are deleted only after a committed, idempotent import; failures retain them.
+On 2026-10-02, the paused Sarena Supabase project `ossdpvluwqgudbmifxmg` was resumed to export its data. One existing note and two permanent receipts were copied to D1. The source project was retained, and exports live in the ignored, owner-readable `.migration.local/` directory. Source notes were not deleted. The private Blob queue was empty at the initial migration check.
 
-The owner wall and login still need Supabase. Resume the project in the Supabase dashboard before reading queued notes there. The queue is independent of Supabase, but still depends on Vercel availability, valid storage credentials, and storage/usage limits. This is outage protection for new submissions, not a permanent second copy of every note already stored in Supabase.
-
-If both server stores are unavailable, the form shows an error and does not claim delivery. Unsent drafts are saved in browser local storage with a seven-day expiry checked on restore, including their retry UUID. The form shows a device-storage notice and a Clear draft control. Sending successfully clears the local draft. Local drafts are not a server backup; browser storage can be blocked, cleared, or unavailable and drafts are never submitted automatically.
-
-## Owner access
-
-Open `/my-notes`, enter the owner email, and request a sign-in link. Check spam if needed. The default Supabase mail service has sending limits and recipient restrictions; for broader delivery, configure an SMTP provider in Supabase. No external mail service was purchased or configured.
-
-To grant another owner, first create their user in Supabase Authentication, then insert their UUID into `public.note_owners` using the SQL editor. A user cannot grant themselves access. Remove their row to revoke access.
+`supabase/` remains historical schema/configuration, not an application dependency. The one-time script `scripts/migrate-notes-to-d1.mjs` needs the old Supabase server environment values and a Wrangler login. It exports all source rows, saves a restricted local backup, and imports notes and receipts without overwriting existing D1 notes or resurrecting a D1-deleted note. Only run it intentionally during migration/recovery; it does not continuously sync edits from the old database. Historical rate reservations are backed up but not imported.
 
 ## Validation
 
 ```sh
+pnpm test:notes
 pnpm build
-node --test tests/notes.test.mjs tests/notes-backup.test.mjs tests/note-draft.test.mjs tests/loop.test.mjs tests/witness.test.mjs
-node --env-file=.env.local --test tests/notes-live.test.mjs tests/notes-backup-live.test.mjs
+NOTES_LIVE_TEST=1 node --env-file=.env.local --env-file=.env.blob.local --test tests/notes-live.test.mjs tests/notes-backup-live.test.mjs
 ```
 
-The live test creates temporary notes and a temporary auth user, verifies anonymous/non-owner denial and owner actions, exercises retry deduplication/rate limiting, and cleans up its records. It needs server credentials and is skipped when those are absent. Run it only against an intended test project or with awareness that it briefly writes test records to the configured database.
+Live tests explicitly opt in, create isolated test notes in the Sarena D1 database, and clean up their own rows and Blob files. They use Wrangler for verification/cleanup and need the local server configuration. The backup test also needs `CRON_SECRET` and the private Blob token. Unit tests cover atomic rate limits, transaction rollback, receipt deduplication, no resurrection, owner-only APIs, cross-origin mutation rejection, immutable messages, filtering, validation, and outage delivery.
 
-Use `pnpm dev` for the full local submission flow at port 5177. `pnpm preview` only serves the static build and does not run the API. Hosted verification should cover a real successful submission, private-wall sign-in, owner controls, direct-link refresh, mobile overflow, and failure preservation.
-
-The backup integration test simulates an unreachable Supabase submission endpoint while using the real private Blob store. It verifies unreadability without credentials, 1,000-character storage, retry deduplication, original timestamps on recovery, and no resurrection after deletion. It uses an isolated `test/` prefix and deletes its own records.
+Hosted checks should include submission, anonymous redirect to Access, owner email-code sign-in, owner controls, and retrying after deletion. Never print private note contents or credentials into test logs.
