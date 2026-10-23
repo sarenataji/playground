@@ -294,4 +294,11 @@ rooms.push({
   bloom: "#ebe2d1", sky: "#f0eadb", invert: false, inkRgb: [0.5, 0.4, 0.28],
 });
 
+rooms.push({
+  path: "/feelings", id: "feelings", name: "Feelings", verb: "Name",
+  note: "Small clues. A word for what’s here.",
+  paper: "#f5f1e8", ink: "#303b30", dust: "#626b5c", accent: "#6c805d",
+  bloom: "#dedfc5", sky: "#e5d5ee", invert: false, inkRgb: [0.3, 0.42, 0.32],
+});
+
 export const destinations = rooms.filter((r) => r.id !== "home" && r.id !== "rooms");

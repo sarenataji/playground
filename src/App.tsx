@@ -15,6 +15,7 @@ import { Springs } from "./components/Springs";
 import { Tunnel } from "./components/Tunnel";
 import { InkTable } from "./components/InkTable";
 import { Arena } from "./components/Arena";
+import { FeelingFinder } from "./components/FeelingFinder";
 import { Home } from "./pages/Home";
 import { OriginalHome } from "./pages/OriginalHome";
 import { RoomPage } from "./pages/RoomPage";
@@ -70,6 +71,7 @@ function RouteReady({ children, path }: { children: ReactNode; path: string }) {
 
 function RouteBody({ path }: { path: string }) {
   switch (path) {
+    case "/feelings": return <main><FeelingFinder /></main>;
     case "/leave-a-note": return <LeaveNote />;
     case "/my-notes": return <NoteWall />;
     case "/practice/gap":

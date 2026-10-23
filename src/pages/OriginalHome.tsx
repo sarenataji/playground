@@ -12,6 +12,8 @@ import { InkTable } from "@/components/InkTable";
 import { Arena } from "@/components/Arena";
 import { Close } from "@/components/Close";
 
+import { FeelingFinder } from "@/components/FeelingFinder";
+
 export function OriginalHome() {
   return (
     <div className="scroll-home">
@@ -20,6 +22,7 @@ export function OriginalHome() {
       <Shatter />
       <GravityType />
       <Magnets />
+      <FeelingFinder />
       <Corridor classic />
       <Studies />
       <Springs />

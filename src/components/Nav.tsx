@@ -5,6 +5,7 @@ import { MapOverlay } from "./MapOverlay";
 import "./liquid-nav.css";
 
 const ROOM_LINKS = [
+  { href: "/feelings", label: "Find your feeling" },
   { href: "/leave-a-note", label: "Leave a note" },
   { href: "/witness", label: "Witness" },
   { href: "/practice", label: "Practice" },
@@ -97,6 +98,7 @@ export function Nav() {
           <a href="#system">Rest</a>
           <a href="#shatter">Motion</a>
           <a href="#play">Touch</a>
+          <a href="#feelings">Feel</a>
           <a href="/rooms">Rooms</a>
           <a href="/witness">Witness</a>
           <a href="/practice">Practice</a>
